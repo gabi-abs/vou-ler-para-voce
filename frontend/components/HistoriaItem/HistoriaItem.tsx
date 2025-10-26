@@ -1,25 +1,33 @@
 import { theme } from "@/themes";
+import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import ActionButton from "./ActionButton";
 
 export default function HistoriaItem({ historia }: { historia: any }) {
+  const [ item, setItem ] =  useState<any>(historia);
+
+  const handleFavoriteToggle = () => {
+    item.favoritado = !item.favoritado;
+    setItem({ ...item });
+  };
+
   return (
     <>
-      <View key={historia.id} style={styles.card}>
+      <View key={item.id} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Image source={{ uri: historia.capaUrl }} style={styles.capaImagem} />
+          <Image source={{ uri: item.capaUrl }} style={styles.capaImagem} />
           <View style={styles.cardInfo}>
-            <Text style={styles.cardTitle}>{historia.titulo}</Text>
+            <Text style={styles.cardTitle}>{item.titulo}</Text>
             <Text style={styles.cardDescription} numberOfLines={9} ellipsizeMode="tail">
-              {historia.descricao}
+              {item.descricao}
             </Text>
           </View>
         </View>
         <View style={styles.actionsContainer}>
-          <ActionButton type="primary" title="Ouvir" icon="play-arrow" onPress={() => {}} historia={historia} />
-          <ActionButton type="tertiary" title="Gravar" icon="record-voice-over" onPress={() => {}} historia={historia} />
-          <ActionButton type="secondary" title="Editar" icon="edit" onPress={() => {}} historia={historia} />
-          <ActionButton type="outline" icon="favorite-border" onPress={() => {}} historia={historia} />
+          <ActionButton type="primary" title="Ouvir" icon="play-arrow" onPress={() => {}} historia={item} />
+          <ActionButton type="tertiary" title="Gravar" icon="record-voice-over" onPress={() => {}} historia={item} />
+          <ActionButton type="secondary" title="Editar" icon="edit" onPress={() => {}} historia={item} />
+          <ActionButton type="outline" icon={item.favoritado ? "favorite" : "favorite-border"} onPress={handleFavoriteToggle} historia={item} />
         </View>
       </View>
     </>
