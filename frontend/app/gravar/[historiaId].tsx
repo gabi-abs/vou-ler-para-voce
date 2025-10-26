@@ -1,7 +1,7 @@
 import HistoriasMock from "@/mocks/historias";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 
 interface Historia {
@@ -43,8 +43,7 @@ export default function GravarHistoriaScreen() {
 
 
   return (
-    <View style={styles.container}>
-
+      <View style={styles.container}>
       <View style={styles.capa}>
         {historia && historia.capaUrl ? (
           <>
@@ -56,9 +55,12 @@ export default function GravarHistoriaScreen() {
         )}
       </View>
 
-      <View>
-        <Text style={styles.descricao}>{historia?.descricao || "Descrição não disponível."}</Text>
-      </View>
+      
+      <ScrollView>
+        <View>
+          <Text style={styles.descricao}>{historia?.descricao || "Descrição não disponível."}</Text>
+        </View>
+      </ScrollView>
 
       <View style={styles.areaGravacao}>
         <TouchableOpacity

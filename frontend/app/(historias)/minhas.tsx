@@ -1,7 +1,7 @@
 import HistoriasMock from "@/mocks/historias";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 interface Historia {
   id: string;
@@ -22,7 +22,8 @@ export default function VerMinhasHistorias() {
 
   return (
     <View>
-      {historiaLista.map(historia => (
+      <ScrollView>
+        {historiaLista.map(historia => (
         <View key={historia.id} style={styles.itemLista}>
            <Image source={{ uri: historia.capaUrl }} style={styles.capaImagem} />
             <Text>{historia.titulo}</Text>
@@ -47,6 +48,7 @@ export default function VerMinhasHistorias() {
           </View>
         </View>
       ))}
+      </ScrollView>
     </View>
   )
 }
