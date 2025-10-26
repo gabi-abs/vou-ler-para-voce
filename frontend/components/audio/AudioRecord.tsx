@@ -1,4 +1,4 @@
-import { RecordingOptions, useAudioRecorder } from "expo-audio";
+import { RecordingOptions, requestRecordingPermissionsAsync, setAudioModeAsync, useAudioRecorder } from "expo-audio";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -34,11 +34,29 @@ export default function AudioRecorder({ onFinish }: AudioRecorderProps) {
 
   async function iniciarGravacao() {
     try {
+      // Solicita permissões antes de gravar
+      const permission = await requestRecordingPermissionsAsync();
+      
+      if (!permission.granted) {
+        Alert.alert(
+          "Permissão necessária",
+          "É necessário permitir o acesso ao microfone para gravar áudio.",
+          [{ text: "OK" }]
+        );
+        return;
+      }
+
+      // Configura o modo de áudio para permitir gravação no iOS
+      await setAudioModeAsync({
+        allowsRecording: true,
+        playsInSilentMode: true,
+      });
+
       await recorder.record();
       setAudioUri(null);
     } catch (error) {
       console.error("Erro ao iniciar gravação:", error);
-      Alert.alert("Erro", "Não foi possível iniciar a gravação. Verifique as permissões.");
+      Alert.alert("Erro", `Não foi possível iniciar a gravação: ${error}`);
     }
   }
 
@@ -46,6 +64,12 @@ export default function AudioRecorder({ onFinish }: AudioRecorderProps) {
     try {
       const uri = await recorder.stop();
       setAudioUri(uri ?? null);
+
+      // Restaura o modo de áudio para reprodução
+      await setAudioModeAsync({
+        allowsRecording: false,
+        playsInSilentMode: true,
+      });
 
       if (uri !== null && uri !== undefined) {
         if (onFinish) onFinish(uri);
