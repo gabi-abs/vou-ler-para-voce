@@ -1,7 +1,9 @@
+import AudioPlayer from "@/components/audio/AudioPlayer";
+import AudioRecorder from "@/components/audio/AudioRecord";
 import HistoriasMock from "@/mocks/historias";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 
 interface Historia {
@@ -13,19 +15,8 @@ interface Historia {
 
 export default function GravarHistoriaScreen() {
   const { historiaId } = useLocalSearchParams() as { historiaId: string }; // pega o :id da URL
-  const router = useRouter();
   const [historia, setHistoria] = useState<Historia | null>(null);
-
-  function handleIniciarGravacao() {
-    // futuramente aqui entra a lógica de microfone
-    Alert.alert("Gravação", `Iniciando gravação da história ${historiaId}...`);
-  }
-
-  function handleFinalizarGravacao() {
-    Alert.alert("Gravação finalizada", "Sua narração foi salva (mock).");
-    // você poderia fazer router.back() pra voltar pra lista
-    router.back();
-  }
+  const [ultimoAudioUri, setUltimoAudioUri] = useState<string | null>(null);
 
   function buscarHistoriaPorId(id: string): Historia | null {
     // Mock de busca - em um app real, você buscaria de uma API ou banco de dados
@@ -63,12 +54,8 @@ export default function GravarHistoriaScreen() {
       </ScrollView>
 
       <View style={styles.areaGravacao}>
-        <TouchableOpacity
-          style={[styles.botao, styles.botaoPrimario]}
-          onPress={handleIniciarGravacao}
-        >
-          <Text style={styles.botaoTexto}>Iniciar gravação</Text>
-        </TouchableOpacity>
+        <AudioRecorder onFinish={(uri) => { setUltimoAudioUri(uri) }} />
+        <AudioPlayer uri={ultimoAudioUri} />
       </View>
     </View>
   );

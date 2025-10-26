@@ -12,7 +12,7 @@ export default function HistoriasTabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="menu-book" color={color} size={size} />
           ),
-          headerTitle: "Minhas histórias",
+          headerShown: false,
         }}
       />
       <Tabs.Screen

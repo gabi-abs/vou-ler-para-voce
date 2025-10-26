@@ -15,7 +15,8 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="index" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="index" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="(historias)" options={{ headerTitle: 'Voltar' }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
