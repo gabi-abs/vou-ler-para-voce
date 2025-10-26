@@ -1,5 +1,5 @@
-import { Audio, AVPlaybackSource, AVPlaybackStatusSuccess } from "expo-av";
-import { useEffect, useRef, useState } from "react";
+import { AudioSource, useAudioPlayer as useExpoAudioPlayer } from "expo-audio";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Alert } from "react-native";
 
 interface UseAudioPlayerReturn {
@@ -10,64 +10,87 @@ interface UseAudioPlayerReturn {
   formatarMs: (ms: number | null) => string;
 }
 
-export function useAudioPlayer(source?: AVPlaybackSource | null): UseAudioPlayerReturn {
-  const [isPlaying, setIsPlaying] = useState(false);
+export function useAudioPlayer(source?: AudioSource | null): UseAudioPlayerReturn {
+  // Memoriza o source para evitar recriações desnecessárias do player
+  const memoizedSource = useMemo(() => source ?? undefined, [source]);
+  const player = useExpoAudioPlayer(memoizedSource);
+
   const [duracaoMs, setDuracaoMs] = useState<number | null>(null);
   const [posicaoMs, setPosicaoMs] = useState<number | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastSourceRef = useRef<AudioSource | null | undefined>(null);
 
-  // vamos manter a instância do som viva entre renders
-  const soundRef = useRef<Audio.Sound | null>(null);
-
-  // carrega o som quando tiver uma URI nova
-  async function carregarSom() {
-    if (!source) {
-      Alert.alert("Nada para tocar", "Nenhum áudio foi selecionado ainda.");
-      return;
+  // Limpa o intervalo anterior
+  const clearUpdateInterval = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
+  }, []);
 
+  // Atualiza progresso do áudio
+  const updateProgress = useCallback(() => {
     try {
-      // se já existe um sound carregado antigo, descarrega
-      if (soundRef.current) {
-        await soundRef.current.unloadAsync();
-        soundRef.current = null;
-      }
+      // Verifica se o player está disponível
+      if (!player) return;
 
-      const { sound, status } = await Audio.Sound.createAsync(
-        source,
-        { shouldPlay: false, progressUpdateIntervalMillis: 250 }, // não toca imediatamente
-        onPlaybackStatusUpdate
-      );
+      const currentTimeMs = player.currentTime * 1000;
+      const durationMs = player.duration ? player.duration * 1000 : null;
 
-      soundRef.current = sound;
-
-      if ((status as AVPlaybackStatusSuccess).isLoaded) {
-        setDuracaoMs((status as AVPlaybackStatusSuccess).durationMillis ?? null);
-        setPosicaoMs((status as AVPlaybackStatusSuccess).positionMillis ?? null);
-      }
-    } catch (err) {
-      console.error("Erro ao carregar áudio:", err);
-      Alert.alert("Erro", "Não foi possível carregar o áudio.");
+      setPosicaoMs(currentTimeMs);
+      setDuracaoMs(durationMs);
+    } catch (error) {
+      // Silenciosamente ignora erros de player liberado
     }
-  }
+  }, [player]);
 
-  // callback chamado toda vez que o status do player muda
-  function onPlaybackStatusUpdate(status: any) {
-    if (!status.isLoaded) {
-      return;
+  // Gerencia a atualização periódica baseada no estado de playing
+  useEffect(() => {
+    clearUpdateInterval();
+
+    // Atualiza imediatamente
+    updateProgress();
+
+    // Se estiver tocando, inicia intervalo de atualização
+    if (player.playing) {
+      intervalRef.current = setInterval(() => {
+        updateProgress();
+      }, 250);
     }
 
-    const successStatus = status as AVPlaybackStatusSuccess;
+    return () => clearUpdateInterval();
+  }, [player.playing, updateProgress, clearUpdateInterval]);
 
-    setIsPlaying(successStatus.isPlaying);
-    setPosicaoMs(successStatus.positionMillis ?? null);
-    setDuracaoMs(successStatus.durationMillis ?? null);
+  // Atualiza quando mudar a source
+  useEffect(() => {
+    // Se a source mudou, para o player atual
+    if (lastSourceRef.current !== source) {
+      clearUpdateInterval();
 
-    // se o áudio terminou naturalmente, volta pro início
-    if (successStatus.didJustFinish) {
-      soundRef.current?.setPositionAsync(0);
-      setIsPlaying(false);
+      // Não tenta pausar, apenas limpa o intervalo
+      // O useAudioPlayer do expo-audio gerencia o ciclo de vida internamente
+
+      lastSourceRef.current = source;
     }
-  }
+
+    if (source) {
+      // Pequeno delay para garantir que o player está pronto
+      setTimeout(() => {
+        updateProgress();
+      }, 100);
+    } else {
+      setPosicaoMs(null);
+      setDuracaoMs(null);
+    }
+  }, [source, updateProgress, clearUpdateInterval]);
+
+  // Cleanup ao desmontar
+  useEffect(() => {
+    return () => {
+      clearUpdateInterval();
+      // Não tenta pausar o player aqui pois ele pode já estar liberado
+    };
+  }, [clearUpdateInterval]);
 
   async function togglePlayPause() {
     if (!source) {
@@ -75,54 +98,25 @@ export function useAudioPlayer(source?: AVPlaybackSource | null): UseAudioPlayer
       return;
     }
 
-    // se não carregamos o som ainda nessa sessão, carrega agora
-    if (!soundRef.current) {
-      await carregarSom();
-    }
+    try {
+      if (player.playing) {
+        player.pause();
+      } else {
+        player.play();
+      }
 
-    if (!soundRef.current) {
-      return;
-    }
-
-    const status = (await soundRef.current.getStatusAsync()) as AVPlaybackStatusSuccess;
-
-    if (!status.isLoaded) {
-      return;
-    }
-
-    if (status.isPlaying) {
-      await soundRef.current.pauseAsync();
-    } else {
-      await soundRef.current.playAsync();
+      // Força atualização imediata do estado após um pequeno delay
+      setTimeout(() => {
+        try {
+          updateProgress();
+        } catch (error) {
+          // Ignora erros silenciosamente
+        }
+      }, 100);
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível reproduzir o áudio. Tente novamente.");
     }
   }
-
-  // limpar recurso de áudio quando o componente desmontar
-  useEffect(() => {
-    return () => {
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-        soundRef.current = null;
-      }
-    };
-  }, []);
-
-  // se a URI mudar externamente (por ex: gravou outro áudio), recarrega o som
-  useEffect(() => {
-    if (source) {
-      carregarSom();
-    } else {
-      // sem uri => reseta estado
-      setIsPlaying(false);
-      setDuracaoMs(null);
-      setPosicaoMs(null);
-
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-        soundRef.current = null;
-      }
-    }
-  }, [source]);
 
   function formatarMs(ms: number | null): string {
     if (ms == null) return "00:00";
@@ -138,7 +132,7 @@ export function useAudioPlayer(source?: AVPlaybackSource | null): UseAudioPlayer
   }
 
   return {
-    isPlaying,
+    isPlaying: player.playing,
     duracaoMs,
     posicaoMs,
     togglePlayPause,

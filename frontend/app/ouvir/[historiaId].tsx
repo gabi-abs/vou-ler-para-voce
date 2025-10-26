@@ -3,7 +3,7 @@ import { useAudioPlayer } from "@/hooks/use-audio-player";
 import HistoriasMock from "@/mocks/historias";
 import { theme } from "@/themes";
 import { MaterialIcons } from "@expo/vector-icons";
-import { AVPlaybackSource } from "expo-av";
+import { AudioSource } from "expo-audio";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
@@ -13,7 +13,7 @@ interface Historia {
   titulo: string;
   descricao?: string;
   capaUrl?: string;
-  audioUrl?: AVPlaybackSource; // Pode ser URI string ou require()
+  audioUrl?: AudioSource; // Pode ser URI string ou require()
 }
 
 export default function OuvirHistoriaScreen() {
@@ -66,10 +66,10 @@ export default function OuvirHistoriaScreen() {
         </View>
 
         <View style={styles.actionContainer}>
-          <Pressable onPress={togglePlayPause}>
+          <Pressable onPress={togglePlayPause} disabled={!historia?.audioUrl}>
             <MaterialIcons 
               name={isPlaying ? "pause-circle-filled" : "play-circle-filled"} 
-              color={theme.colors.button.secondary.color} 
+              color={!historia?.audioUrl ? "#ccc" : theme.colors.button.secondary.color} 
               size={64} 
             />
           </Pressable>

@@ -1,5 +1,5 @@
-import { Audio } from "expo-av";
-import { useRef, useState } from "react";
+import { RecordingOptions, useAudioRecorder } from "expo-audio";
+import { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface AudioRecorderProps {
@@ -7,49 +7,50 @@ interface AudioRecorderProps {
 }
 
 export default function AudioRecorder({ onFinish }: AudioRecorderProps) {
-  const [gravando, setGravando] = useState(false);
+  const recordingOptions: RecordingOptions = {
+    extension: ".m4a",
+    sampleRate: 44100,
+    numberOfChannels: 2,
+    bitRate: 128000,
+    android: {
+      outputFormat: "mpeg4",
+      audioEncoder: "aac",
+    },
+    ios: {
+      outputFormat: "mpeg4AAC",
+      audioQuality: 127,
+      linearPCMBitDepth: 16,
+      linearPCMIsBigEndian: false,
+      linearPCMIsFloat: false,
+    },
+    web: {
+      mimeType: "audio/webm",
+      bitsPerSecond: 128000,
+    },
+  };
+
+  const recorder = useAudioRecorder(recordingOptions);
   const [audioUri, setAudioUri] = useState<string | null>(null);
-  const recordingRef = useRef<Audio.Recording | null>(null);
 
   async function iniciarGravacao() {
     try {
-      const perm = await Audio.requestPermissionsAsync();
-      if (perm.status !== "granted") {
-        Alert.alert("Permissão negada", "Permita o uso do microfone para gravar.");
-        return;
-      }
-
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-
-      const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
-      await recording.startAsync();
-
-      recordingRef.current = recording;
-      setGravando(true);
+      await recorder.record();
       setAudioUri(null);
     } catch (error) {
       console.error("Erro ao iniciar gravação:", error);
-      Alert.alert("Erro", "Não foi possível iniciar a gravação.");
+      Alert.alert("Erro", "Não foi possível iniciar a gravação. Verifique as permissões.");
     }
   }
 
   async function pararGravacao() {
     try {
-      const recording = recordingRef.current;
-      if (!recording) return;
-
-      await recording.stopAndUnloadAsync();
-      const uri = recording.getURI();
-      recordingRef.current = null;
-      setGravando(false);
+      const uri = await recorder.stop();
       setAudioUri(uri ?? null);
 
-      if (uri && onFinish) onFinish(uri);
-      Alert.alert("Gravação concluída", "O áudio foi salvo com sucesso.");
+      if (uri !== null && uri !== undefined) {
+        if (onFinish) onFinish(uri);
+        Alert.alert("Gravação concluída", "O áudio foi salvo com sucesso.");
+      }
     } catch (error) {
       console.error("Erro ao parar gravação:", error);
       Alert.alert("Erro", "Não foi possível parar a gravação.");
@@ -59,15 +60,15 @@ export default function AudioRecorder({ onFinish }: AudioRecorderProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.status}>
-        Status: {gravando ? "🎙 Gravando..." : "⏹ Parado"}
+        Status: {recorder.isRecording ? "🎙 Gravando..." : "⏹ Parado"}
       </Text>
 
       <TouchableOpacity
-        style={[styles.botao, gravando ? styles.botaoParar : styles.botaoGravar]}
-        onPress={gravando ? pararGravacao : iniciarGravacao}
+        style={[styles.botao, recorder.isRecording ? styles.botaoParar : styles.botaoGravar]}
+        onPress={recorder.isRecording ? pararGravacao : iniciarGravacao}
       >
         <Text style={styles.textoBotao}>
-          {gravando ? "Parar gravação" : "Iniciar gravação"}
+          {recorder.isRecording ? "Parar gravação" : "Iniciar gravação"}
         </Text>
       </TouchableOpacity>
 

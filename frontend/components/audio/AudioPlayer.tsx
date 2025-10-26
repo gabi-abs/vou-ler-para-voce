@@ -1,9 +1,9 @@
 import { useAudioPlayer } from "@/hooks/use-audio-player";
-import { AVPlaybackSource } from "expo-av";
+import { AudioSource } from "expo-audio";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface AudioPlayerProps {
-  source?: AVPlaybackSource | null; // caminho do áudio (URI string ou require())
+  source?: AudioSource | null; // caminho do áudio (URI string ou require())
 }
 
 export default function AudioPlayer({ source }: AudioPlayerProps) {

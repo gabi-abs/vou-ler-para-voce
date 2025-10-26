@@ -67,7 +67,7 @@ export default function GravarHistoriaScreen() {
             salvarAudioUri(uri);
           }}
         />
-        <AudioPlayer uri={ultimoAudioUri} />
+        <AudioPlayer source={ultimoAudioUri} />
       </View>
     </View>
   );
