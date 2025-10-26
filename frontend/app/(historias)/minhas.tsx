@@ -1,4 +1,5 @@
 import HistoriasMock from "@/mocks/historias";
+import { theme } from "@/themes";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -21,7 +22,7 @@ export default function VerMinhasHistorias() {
 
 
   return (
-    <View>
+    <View style={styles.container}>
       <ScrollView>
         {historiaLista.map(historia => (
         <View key={historia.id} style={styles.itemLista}>
@@ -54,6 +55,9 @@ export default function VerMinhasHistorias() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: theme.colors.background,
+  },
   actionButton: {
     marginRight: 10,
     padding: 10,
