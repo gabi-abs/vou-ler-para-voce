@@ -11,6 +11,7 @@ interface Historia {
   titulo: string;
   descricao?: string;
   capaUrl?: string;
+  audioUrl?: string; // URL ou caminho do áudio da história
 }
 
 export default function GravarHistoriaScreen() {
@@ -24,6 +25,12 @@ export default function GravarHistoriaScreen() {
 
     return historiasMock.find(historia => historia.id === id) || null;
   }
+
+  function salvarAudioUri(uri: string) {
+    setUltimoAudioUri(uri);
+    setHistoria(prev => prev ? { ...prev, audioUrl: uri } : prev);
+  }
+
 
   useEffect(() => {
     if (historiaId) {
@@ -54,7 +61,7 @@ export default function GravarHistoriaScreen() {
       </ScrollView>
 
       <View style={styles.areaGravacao}>
-        <AudioRecorder onFinish={(uri) => { setUltimoAudioUri(uri) }} />
+        <AudioRecorder onFinish={(uri) => { salvarAudioUri(uri) }} />
         <AudioPlayer uri={ultimoAudioUri} />
       </View>
     </View>

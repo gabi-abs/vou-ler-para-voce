@@ -1,20 +1,25 @@
 import { theme } from "@/themes";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 interface ProgressBarProps {
-  posicao?: number;
-  duracao?: number;
+  posicaoMs?: number | null;
+  duracaoMs?: number | null;
 }
 
-export default function ProgressBar({posicao, duracao}: ProgressBarProps) {
+export default function ProgressBar({ posicaoMs, duracaoMs }: ProgressBarProps) {
+  // Calcula a porcentagem de progresso
+  const calcularProgresso = (): number => {
+    if (!posicaoMs || !duracaoMs || duracaoMs === 0) {
+      return 0;
+    }
+    const porcentagem = (posicaoMs / duracaoMs) * 100;
+    return Math.min(100, Math.max(0, porcentagem));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerProgress}>
-        <View style={styles.progress} />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.timeText}>{posicao}</Text>
-        <Text style={styles.timeText}>{duracao}</Text>
+        <View style={[styles.progress, { width: `${calcularProgresso()}%` }]} />
       </View>
     </View>
   );
@@ -29,19 +34,10 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: theme.colors.brown2,
     borderRadius: 5,
-    marginBottom: 10,
   },
   progress: {
     height: "100%",
-    width: "50%",
     backgroundColor: theme.colors.brown,
     borderRadius: 5,
-  },
-  textContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  timeText: {
-    fontSize: 15,
   },
 });

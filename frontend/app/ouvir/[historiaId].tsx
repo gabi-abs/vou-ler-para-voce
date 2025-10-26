@@ -1,4 +1,5 @@
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
+import { useAudioPlayer } from "@/hooks/use-audio-player";
 import HistoriasMock from "@/mocks/historias";
 import { theme } from "@/themes";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -11,11 +12,15 @@ interface Historia {
   titulo: string;
   descricao?: string;
   capaUrl?: string;
+  audioUrl?: string; // URL ou caminho do áudio da história
 }
 
 export default function OuvirHistoriaScreen() {
   const { historiaId } = useLocalSearchParams() as { historiaId: string };
   const [historia, setHistoria] = useState<Historia | null>(null);
+  
+  // Hook do player de áudio - passa o audioUrl da história
+  const { isPlaying, duracaoMs, posicaoMs, togglePlayPause, formatarMs } = useAudioPlayer(historia?.audioUrl);
 
   function buscarHistoriaPorId(id: string): Historia | null {
     // Mock de busca - em um app real, você buscaria de uma API ou banco de dados
@@ -51,12 +56,21 @@ export default function OuvirHistoriaScreen() {
 
       <View>
         <View>
-          <ProgressBar />
+          <ProgressBar posicaoMs={posicaoMs} duracaoMs={duracaoMs} />
+        </View>
+
+        <View style={styles.timeContainer}>
+          <Text style={styles.timeText}>{formatarMs(posicaoMs)}</Text>
+          <Text style={styles.timeText}>{formatarMs(duracaoMs)}</Text>
         </View>
 
         <View style={styles.actionContainer}>
-          <Pressable onPress={() => {}}>
-            <MaterialIcons name="play-circle-filled" color={theme.colors.button.secondary.color} size={64} />
+          <Pressable onPress={togglePlayPause}>
+            <MaterialIcons 
+              name={isPlaying ? "pause-circle-filled" : "play-circle-filled"} 
+              color={theme.colors.button.secondary.color} 
+              size={64} 
+            />
           </Pressable>
           <Pressable onPress={() => {}}>
             <MaterialIcons name="lock"  color={theme.colors.button.tertiary.color} size={64} />
@@ -95,6 +109,17 @@ const styles = StyleSheet.create({
   capaImagem: {
     height: "100%",
     resizeMode: "cover",
+  },
+  timeContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 30,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  timeText: {
+    fontSize: 15,
+    color: theme.colors.text,
   },
   actionContainer: {
     flexDirection: "row",
