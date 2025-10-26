@@ -1,14 +1,15 @@
+import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
-  Button,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 export default function CriarNovaHistoria() {
@@ -68,7 +69,8 @@ export default function CriarNovaHistoria() {
       <Text style={styles.label}>Título</Text>
       <TextInput
         style={styles.input}
-        placeholder="Digite o título"
+        placeholder="Digite o título.."
+        placeholderTextColor="#AF9D8D"
         value={titulo}
         onChangeText={setTitulo}
       />
@@ -76,27 +78,34 @@ export default function CriarNovaHistoria() {
       <Text style={styles.label}>Descrição</Text>
       <TextInput
         style={[styles.input, styles.textarea]}
-        placeholder="Digite uma breve descrição"
+        placeholder="Digite a sua história aqui.." 
+        placeholderTextColor="#AF9D8D"
         multiline
         numberOfLines={4}
         value={descricao}
         onChangeText={setDescricao}
       />
-
+      <Text style={styles.label}>Capa</Text>
       <TouchableOpacity style={styles.botaoCapa} onPress={handleSelecionarCapa}>
-        <Text style={styles.textoBotaoCapa}>Adicionar capa</Text>
+      <Ionicons name="camera-outline" size={40} color="#573212" />
+        <Text style={styles.textoBotaoCapa}>+ Adicionar capa</Text>
       </TouchableOpacity>
 
       {capaSelecionada && (
         <Text style={styles.mensagemCapa}>✅ Capa selecionada!</Text>
       )}
 
-      <View style={{ marginTop: 24 }}>
-        <Button title="Salvar História" onPress={handleSalvar} />
-      </View>
+     
+<View>
+<Pressable style={styles.botaoSalvar} onPress={handleSalvar}>
+    <Text style={styles.textoBotaoSalvar}>Salvar História</Text>
+  </Pressable>
+  </View>
+
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -115,6 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     marginBottom: 8,
+    
   },
   input: {
     borderWidth: 2,
@@ -124,28 +134,58 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginBottom: 16,
     fontSize: 16,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+   // color: "#AF9D8D"
+    
   },
   textarea: {
     height: 100,
     textAlignVertical: "top",
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+  
   },
   botaoCapa: {
-    backgroundColor: "#6C63FF",
+    backgroundColor: "#F5FAEA",
     paddingVertical: 12,
     borderRadius: 8,
+    borderColor: "#DEE9DC",
+    borderWidth: 2,
     alignItems: "center",
     marginBottom: 8,
+    height: 110,
+    width: 110,
+  
   },
   textoBotaoCapa: {
-    color: "#fff",
-    fontWeight: "600",
+    color: "#573212",
+    fontWeight: "500",
     fontSize: 16,
+    textAlign: "center",
+    paddingVertical: 8
   },
   mensagemCapa: {
     color: "green",
     fontSize: 14,
     marginBottom: 12,
   },
+
+  botaoSalvar: {
+    margin: 24, 
+    backgroundColor: "#FFE187", 
+    borderRadius: 20, 
+    height: 50, 
+    borderWidth: 2,
+    borderColor: "#E9C66C", 
+    paddingVertical: 12
+
+  },
+
+  textoBotaoSalvar: {
+    color: "#D16314", 
+    textAlign: "center", 
+    fontWeight: "bold", 
+    fontSize: 20
+
+  }
+  
 });
