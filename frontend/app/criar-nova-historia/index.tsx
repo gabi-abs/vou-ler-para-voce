@@ -58,7 +58,7 @@ export default function CriarNovaHistoria() {
       }`
     );
 
-    return router.navigate('/(historias)/historias/minhas');
+    return router.navigate('/minhas');
   }
 
   return (

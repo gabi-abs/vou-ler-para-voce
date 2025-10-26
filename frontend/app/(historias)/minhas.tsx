@@ -30,7 +30,7 @@ export default function VerMinhasHistorias() {
             <Pressable onPress={() => {}}>
               <Text>Ouvir</Text>
             </Pressable>
-            <Link href={{ pathname: `/(historias)/historias/[historiaId]/gravar`, params: { historiaId: historia.id } }} asChild>
+            <Link href={{ pathname: `/gravar/[historiaId]`, params: { historiaId: historia.id } }} asChild>
               <Pressable style={styles.actionButton}>
                 <Text>Gravar</Text>
               </Pressable>

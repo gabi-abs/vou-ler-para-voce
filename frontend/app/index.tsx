@@ -5,10 +5,10 @@ export default function Main() {
   return (
     <View style={styles.container}>
       <Text style={styles.title1}>Bem-vindo ao</Text>
-      <Text style={styles.title2}> Vou Ler Para Você!</Text>
-      <Link style={styles.link1}  href="/criar-nova-historia">Criar Nova Historia</Link>
-      <Link style={styles.link2} href="/(historias)/historias/minhas">Ver Minhas Historias</Link>
-      <Link style={styles.link3} href="/(historias)/historias/favoritas">Ver Favoritas</Link>
+      <Text style={styles.title2}>Vou Ler Para Você!</Text>
+      <Link style={styles.link1} href="/criar-nova-historia">Criar Nova Historia</Link>
+      <Link style={styles.link2} href="/minhas">Ver Minhas Historias</Link>
+      <Link style={styles.link3} href="/favoritas">Ver Favoritas</Link>
     </View>
   );
 }
