@@ -26,6 +26,13 @@ export default function HistoriasTabsLayout() {
         }}
       />
 
+      <Tabs.Screen
+        name="[historiaId]"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
     </Tabs>
   );
 }
