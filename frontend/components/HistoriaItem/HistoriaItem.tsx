@@ -19,6 +19,7 @@ export default function HistoriaItem({ historia }: { historia: any }) {
           <ActionButton type="primary" title="Ouvir" icon="play-arrow" onPress={() => {}} historia={historia} />
           <ActionButton type="tertiary" title="Gravar" icon="record-voice-over" onPress={() => {}} historia={historia} />
           <ActionButton type="secondary" title="Editar" icon="edit" onPress={() => {}} historia={historia} />
+          <ActionButton type="outline" icon="favorite-border" onPress={() => {}} historia={historia} />
         </View>
       </View>
     </>

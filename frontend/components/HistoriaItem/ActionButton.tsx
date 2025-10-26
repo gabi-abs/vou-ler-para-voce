@@ -17,8 +17,8 @@ export default function ActionButton({ title, onPress, historia, icon, type}: an
     >
       <Pressable style={buttonStyle} onPress={onPress}>
         <View style={styles.buttonContent}>
-          <MaterialIcons name={icon} size={24} />
-          <Text style={buttonTextStyle}>{title}</Text>
+          <MaterialIcons name={icon} size={title ? 20 : 20} />
+          {title && <Text style={buttonTextStyle}>{title}</Text>}
         </View>
       </Pressable>
     </Link>
@@ -27,9 +27,8 @@ export default function ActionButton({ title, onPress, historia, icon, type}: an
 
 const styles = StyleSheet.create({
   actionButton: {
-    marginRight: 10,
     padding: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     backgroundColor: "#DDDDDD",
     borderRadius: 15,
   },
@@ -42,9 +41,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
+    gap: 5,
   },
   primary: { ...theme.colors.button.primary },
   secondary: { ...theme.colors.button.secondary },
   tertiary: { ...theme.colors.button.tertiary },
+  outline: {
+    backgroundColor: "transparent",
+  },
 });
