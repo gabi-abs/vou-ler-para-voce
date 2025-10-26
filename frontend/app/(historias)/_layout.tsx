@@ -22,7 +22,7 @@ export default function HistoriasTabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="favorite" color={color} size={size} />
           ),
-          headerTitle: "Favoritas",
+          headerShown: false,
         }}
       />
     </Tabs>
