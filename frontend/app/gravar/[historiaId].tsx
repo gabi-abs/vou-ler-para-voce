@@ -5,12 +5,12 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
-
 interface Historia {
   id: string;
   titulo: string;
   descricao?: string;
   capaUrl?: string;
+  audioUrl?: string; // URL ou caminho do áudio da história
 }
 
 export default function GravarHistoriaScreen() {
@@ -22,7 +22,12 @@ export default function GravarHistoriaScreen() {
     // Mock de busca - em um app real, você buscaria de uma API ou banco de dados
     const historiasMock: Historia[] = HistoriasMock;
 
-    return historiasMock.find(historia => historia.id === id) || null;
+    return historiasMock.find((historia) => historia.id === id) || null;
+  }
+
+  function salvarAudioUri(uri: string) {
+    setUltimoAudioUri(uri);
+    setHistoria((prev) => (prev ? { ...prev, audioUrl: uri } : prev));
   }
 
   useEffect(() => {
@@ -32,13 +37,15 @@ export default function GravarHistoriaScreen() {
     }
   }, [historiaId]);
 
-
   return (
-      <View style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.capa}>
         {historia && historia.capaUrl ? (
           <>
-            <Image source={{ uri: historia.capaUrl }} style={styles.capaImagem} />
+            <Image
+              source={{ uri: historia.capaUrl }}
+              style={styles.capaImagem}
+            />
             <Text>{historia.titulo}</Text>
           </>
         ) : (
@@ -46,15 +53,20 @@ export default function GravarHistoriaScreen() {
         )}
       </View>
 
-      
       <ScrollView>
         <View>
-          <Text style={styles.descricao}>{historia?.descricao || "Descrição não disponível."}</Text>
+          <Text style={styles.descricao}>
+            {historia?.descricao || "Descrição não disponível."}
+          </Text>
         </View>
       </ScrollView>
 
       <View style={styles.areaGravacao}>
-        <AudioRecorder onFinish={(uri) => { setUltimoAudioUri(uri) }} />
+        <AudioRecorder
+          onFinish={(uri) => {
+            salvarAudioUri(uri);
+          }}
+        />
         <AudioPlayer uri={ultimoAudioUri} />
       </View>
     </View>
@@ -105,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   capaImagem: {
-    width: 150, 
+    width: 150,
     height: 200,
     resizeMode: "cover",
     borderRadius: 8,

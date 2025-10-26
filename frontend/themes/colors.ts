@@ -1,7 +1,8 @@
+
 export const colors = {
   background: '#FFF8E2',
   card: '#ffffffff',
-  border: "#EEE5DE",
+  border: "#F7EBD3",
   button: {
     primary: {
       backgroundColor: '#C7E9D2',
@@ -9,7 +10,7 @@ export const colors = {
     },
     secondary: {
       backgroundColor: '#FFEDB3',
-      color: '#BC793D',
+      color: '#C3782C',
     },
     tertiary: {
       backgroundColor: '#EBE0F6',
@@ -17,8 +18,14 @@ export const colors = {
     }
   },
   title1: {
-    color: '#D87443',
+    color: '#C3782C',
     fontWeight: 900,
     fontSize: 30,
-  }
+  },
+  white: "#FFFFFF",
+  brown: "#C3782C",
+  brown2: "#F7EBD3",
+  yellow: "#FFEDB3",
+  green: "#67A782",
+  purple: "#7C5CC4",
 } as any
