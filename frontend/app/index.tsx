@@ -1,3 +1,7 @@
+import CriarHistoria from "@/assets/svg/criar-historia.svg";
+import Favoritas from "@/assets/svg/favoritas.svg";
+import Historias from "@/assets/svg/historias.svg";
+import { theme } from "@/themes";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -6,9 +10,26 @@ export default function Main() {
     <View style={styles.container}>
       <Text style={styles.title1}>Bem-vindo ao</Text>
       <Text style={styles.title2}>Vou Ler Para Você!</Text>
-      <Link style={styles.link1} href="/criar-nova-historia">Criar Nova Historia</Link>
-      <Link style={styles.link2} href="/minhas">Ver Minhas Historias</Link>
-      <Link style={styles.link3} href="/favoritas">Ver Favoritas</Link>
+      <View style={styles.linksContainer}>
+        <Link style={[styles.link, theme.colors.button.secondary]} href="/criar-nova-historia">
+          <View style={styles.linkContent}>
+            <CriarHistoria width={40} height={40} />
+          <Text style={[styles.linkText, theme.colors.button.secondary]}>Criar Nova Historia</Text>
+          </View>
+        </Link>
+        <Link style={[styles.link, theme.colors.button.tertiary]} href="/minhas">
+          <View style={styles.linkContent}>
+            <Historias width={40} height={40} />
+            <Text style={[styles.linkText, theme.colors.button.tertiary]}>Ver Minhas Historias</Text>
+          </View>
+        </Link>
+        <Link style={[styles.link, theme.colors.button.primary]} href="/favoritas">
+          <View style={styles.linkContent}>
+            <Favoritas width={40} height={40} />
+            <Text style={[styles.linkText, theme.colors.button.primary]}>Ver Favoritas</Text>
+          </View>
+        </Link>
+      </View>
     </View>
   );
 }
@@ -21,36 +42,26 @@ const styles = StyleSheet.create({
     gap: 20,
     backgroundColor: '#FFF8E2',
   },
-  link1: {
-    fontSize: 18, 
-    backgroundColor: '#FFEDB3',
-    borderRadius: 20,
-    paddingVertical: 30,
-    paddingHorizontal: 20,
-    color: '#BC793D',
-    fontWeight: 'bold',
+  linksContainer: {
+    width: '70%',
+    gap: 25,
+    marginTop: 40,
   },
-
-  link2: {
-    fontSize: 18, 
-    backgroundColor: '#EBE0F6',
+  link: {
     borderRadius: 20,
-    paddingVertical: 30,
+    paddingVertical: 20,
     paddingHorizontal: 20,
-    color: '#7C5CC4',
-    fontWeight: 'bold',
   },
-
-  link3: {
-    fontSize: 18, 
-    backgroundColor: '#C7E9D2',
-    borderRadius: 20,
-    paddingVertical: 30,
-    paddingHorizontal: 20,
-    color: '#67A782',
-    fontWeight: 'bold',
+  linkContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  
+  linkText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
+  },
   title1: {
     color: '#D87443',
     fontWeight: 'bold',
