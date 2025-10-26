@@ -1,5 +1,6 @@
 // app/(historias)/historias/_layout.tsx
-import { MaterialIcons } from "@expo/vector-icons";
+import Favoritas from "@/assets/svg/favoritas.svg";
+import Historias from "@/assets/svg/historias.svg";
 import { Tabs } from "expo-router";
 
 export default function HistoriasTabsLayout() {
@@ -10,7 +11,7 @@ export default function HistoriasTabsLayout() {
         options={{
           title: "Minhas histórias",
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="menu-book" color={color} size={size} />
+            <Historias width={size} height={size} />
           ),
           headerShown: false,
         }}
@@ -20,7 +21,7 @@ export default function HistoriasTabsLayout() {
         options={{
           title: "Favoritas",
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="favorite" color={color} size={size} />
+            <Favoritas width={size} height={size} />
           ),
           headerShown: false,
         }}
