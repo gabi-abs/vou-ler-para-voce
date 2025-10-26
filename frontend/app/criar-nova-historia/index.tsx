@@ -101,7 +101,7 @@ export default function CriarNovaHistoria() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF8E2",
     padding: 20,
   },
   titulo: {
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 24,
     textAlign: "center",
+    color: "#D87443"
   },
   label: {
     fontSize: 16,
@@ -116,17 +117,19 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
+    borderWidth: 2,
+    borderColor: "#EEE5DE",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
     marginBottom: 16,
     fontSize: 16,
+    backgroundColor: "#fff"
   },
   textarea: {
     height: 100,
     textAlignVertical: "top",
+    backgroundColor: "#fff"
   },
   botaoCapa: {
     backgroundColor: "#6C63FF",
