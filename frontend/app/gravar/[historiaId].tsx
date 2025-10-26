@@ -3,7 +3,7 @@ import AudioRecorder from "@/components/audio/AudioRecord";
 import HistoriasMock from "@/mocks/historias";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 interface Historia {
   id: string;
@@ -64,6 +64,8 @@ export default function GravarHistoriaScreen() {
       <View style={styles.areaGravacao}>
         <AudioRecorder
           onFinish={(uri) => {
+            console.log("Áudio salvo em:", uri);
+            Alert.alert("Gravação salva", `Áudio salvo em: ${uri}`);
             salvarAudioUri(uri);
           }}
         />

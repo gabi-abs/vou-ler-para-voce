@@ -1,41 +1,38 @@
 import {
   RecordingOptions,
+  RecordingPresets,
   requestRecordingPermissionsAsync,
   setAudioModeAsync,
-  useAudioRecorder as useExpoAudioRecorder
+  useAudioRecorder as useExpoAudioRecorder,
+  type RecordingStatus
 } from "expo-audio";
 import { useState } from "react";
-import { Alert } from "react-native";
+// Removidos alerts para comportamento silencioso
 
 interface UseAudioRecorderOptions {
   onFinish?: (uri: string) => void;
   onError?: (error: unknown) => void;
+  onStatus?: (status: RecordingStatus) => void; // listener opcional de status
 }
 
+// Use presets oficiais para garantir compatibilidade especialmente no iOS
 const recordingOptions: RecordingOptions = {
-  extension: ".m4a",
-  sampleRate: 44100,
-  numberOfChannels: 2,
-  bitRate: 128000,
-  android: {
-    outputFormat: "mpeg4",
-    audioEncoder: "aac",
-  },
-  ios: {
-    outputFormat: "mpeg4AAC",
-    audioQuality: 127,
-    linearPCMBitDepth: 16,
-    linearPCMIsBigEndian: false,
-    linearPCMIsFloat: false,
-  },
+  ...RecordingPresets.HIGH_QUALITY,
+  // Mantém config de Web
   web: {
     mimeType: "audio/webm",
     bitsPerSecond: 128000,
   },
 };
 
-export function useAudioRecorder({ onFinish, onError }: UseAudioRecorderOptions = {}) {
-  const recorder = useExpoAudioRecorder(recordingOptions);
+export function useAudioRecorder({ onFinish, onError, onStatus }: UseAudioRecorderOptions = {}) {
+  const recorder = useExpoAudioRecorder(
+    recordingOptions,
+    (status) => {
+      // repassa status ao consumidor e loga quando debug
+      if (onStatus) onStatus(status);
+    }
+  );
   const [audioUri, setAudioUri] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
 
@@ -45,11 +42,8 @@ export function useAudioRecorder({ onFinish, onError }: UseAudioRecorderOptions 
       const permission = await requestRecordingPermissionsAsync();
 
       if (!permission.granted) {
-        Alert.alert(
-          "Permissão necessária",
-          "É necessário permitir o acesso ao microfone para gravar áudio.",
-          [{ text: "OK" }]
-        );
+        // Permissão negada: notifica via callback de erro e retorna false
+        if (onError) onError(new Error("Microphone permission not granted"));
         return false;
       }
 
@@ -59,13 +53,14 @@ export function useAudioRecorder({ onFinish, onError }: UseAudioRecorderOptions 
         playsInSilentMode: true,
       });
 
+      // Prepara a gravação (boa prática conforme docs)
+      await recorder.prepareToRecordAsync();
+
       await recorder.record();
       setIsRecording(true);
       setAudioUri(null);
       return true;
     } catch (error) {
-      console.error("Erro ao iniciar gravação:", error);
-      Alert.alert("Erro", `Não foi possível iniciar a gravação: ${error}`);
       if (onError) onError(error);
       return false;
     }
@@ -73,8 +68,11 @@ export function useAudioRecorder({ onFinish, onError }: UseAudioRecorderOptions 
 
   async function stopRecording() {
     try {
-      const uri = await recorder.stop();
+      await recorder.stop();
       setIsRecording(false);
+
+      // O URI da gravação fica disponível na propriedade recorder.uri
+      const uri = recorder.uri;
       setAudioUri(uri ?? null);
 
       // Restaura o modo de áudio para reprodução
@@ -85,13 +83,10 @@ export function useAudioRecorder({ onFinish, onError }: UseAudioRecorderOptions 
 
       if (uri !== null && uri !== undefined) {
         if (onFinish) onFinish(uri);
-        Alert.alert("Gravação concluída", "O áudio foi salvo com sucesso.");
         return uri;
       }
       return null;
     } catch (error) {
-      console.error("Erro ao parar gravação:", error);
-      Alert.alert("Erro", "Não foi possível parar a gravação.");
       if (onError) onError(error);
       setIsRecording(false);
       return null;
