@@ -1,6 +1,6 @@
 export const colors = {
   background: '#FFF8E2',
-  card: '#FFFFFF',
+  card: '#ffffffff',
   border: "#EEE5DE",
   button: {
     primary: {
@@ -18,7 +18,7 @@ export const colors = {
   },
   title1: {
     color: '#D87443',
-    fontWeight: 'bold',
+    fontWeight: 900,
     fontSize: 30,
   }
 } as any

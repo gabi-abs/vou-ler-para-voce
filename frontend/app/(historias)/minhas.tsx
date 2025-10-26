@@ -33,6 +33,7 @@ export default function VerMinhasHistorias() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.background,
+    padding: 10,
   },
   actionButton: {
     marginRight: 10,

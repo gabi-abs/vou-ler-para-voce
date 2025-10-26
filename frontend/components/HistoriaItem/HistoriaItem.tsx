@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.card,
     borderColor: theme.colors.border,
     borderWidth: 2,
+    borderRadius: 20,
   },
   cardInfo: {
     paddingHorizontal: 10,
@@ -60,10 +61,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 8,
     color: "#555555",
-    width: 180,
+    width: 170,
     textAlign: "justify",
   },
   actionsContainer: {
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-between",
   },
