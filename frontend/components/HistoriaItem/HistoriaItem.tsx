@@ -25,8 +25,8 @@ export default function HistoriaItem({ historia }: { historia: any }) {
           </View>
         </View>
         <View style={styles.actionsContainer}>
-          <ActionButton type="primary" title="Ouvir" icon="play-arrow" onPress={() => {router.push(`/ouvir/${item.id}`)}} historia={item} />
           <ActionButton type="tertiary" title="Gravar" icon="record-voice-over" onPress={() => {router.push(`/gravar/${item.id}`)}} historia={item} />
+          <ActionButton type="primary" title="Ouvir" icon="play-arrow" onPress={() => {router.push(`/ouvir/${item.id}`)}} historia={item} />
           <ActionButton type="secondary" title="Editar" icon="edit" onPress={() => {router.push(`/editar/${item.id}`)}} historia={item} />
           <ActionButton type="danger" icon={item.favoritado ? "favorite" : "favorite-border"} onPress={handleFavoriteToggle} historia={item} />
         </View>

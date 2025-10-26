@@ -1,17 +1,8 @@
+import CapaSelector from "@/components/ui/CapaSelector";
 import HistoriasMock from "@/mocks/historias";
-import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 interface Historia {
   id: string;
@@ -30,40 +21,15 @@ export default function EditarHistoriaScreen() {
 
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [capaSelecionada, setCapaSelecionada] = useState(false);
   const [capaUri, setCapaUri] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (historiaAtual) {
       setTitulo(historiaAtual.titulo || "");
       setDescricao(historiaAtual.descricao || "");
-      setCapaSelecionada(!!historiaAtual.capaUrl);
       setCapaUri(historiaAtual.capaUrl);
     }
   }, [historiaAtual]);
-
-  async function handleSelecionarCapa() {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (status !== "granted") {
-      Alert.alert(
-        "Permissão negada",
-        "É necessário permitir o acesso à galeria para adicionar uma capa."
-      );
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setCapaSelecionada(true);
-      setCapaUri(result.assets?.[0]?.uri);
-    }
-  }
 
   function handleSalvar() {
     if (!titulo.trim()) {
@@ -101,6 +67,8 @@ export default function EditarHistoriaScreen() {
     <View style={styles.container}>
       <Text style={styles.titulo}>Editar História</Text>
 
+      <CapaSelector value={capaUri ?? null} onChange={(uri) => setCapaUri(uri ?? undefined)} />
+
       <Text style={styles.label}>Título</Text>
       <TextInput
         style={styles.input}
@@ -120,18 +88,6 @@ export default function EditarHistoriaScreen() {
         value={descricao}
         onChangeText={setDescricao}
       />
-
-      <Text style={styles.label}>Capa</Text>
-      <TouchableOpacity style={styles.botaoCapa} onPress={handleSelecionarCapa}>
-        <Ionicons name="camera-outline" size={40} color="#573212" />
-        <Text style={styles.textoBotaoCapa}>
-          {capaSelecionada ? "Trocar capa" : "+ Adicionar capa"}
-        </Text>
-      </TouchableOpacity>
-
-      {capaSelecionada && (
-        <Text style={styles.mensagemCapa}>✅ Capa selecionada!</Text>
-      )}
 
       <View>
         <Pressable style={styles.botaoSalvar} onPress={handleSalvar}>
@@ -175,29 +131,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     backgroundColor: "#fff",
   },
-  botaoCapa: {
-    backgroundColor: "#F5FAEA",
-    paddingVertical: 12,
-    borderRadius: 8,
-    borderColor: "#DEE9DC",
-    borderWidth: 2,
-    alignItems: "center",
-    marginBottom: 8,
-    height: 110,
-    width: 110,
-  },
-  textoBotaoCapa: {
-    color: "#573212",
-    fontWeight: "500",
-    fontSize: 16,
-    textAlign: "center",
-    paddingVertical: 8,
-  },
-  mensagemCapa: {
-    color: "green",
-    fontSize: 14,
-    marginBottom: 12,
-  },
+  // estilos de capa movidos para CapaSelector
   botaoSalvar: {
     margin: 24,
     backgroundColor: "#FFE187",
