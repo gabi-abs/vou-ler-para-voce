@@ -1,4 +1,5 @@
 import { theme } from "@/themes";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import ActionButton from "./ActionButton";
@@ -25,9 +26,9 @@ export default function HistoriaItem({ historia }: { historia: any }) {
         </View>
         <View style={styles.actionsContainer}>
           <ActionButton type="primary" title="Ouvir" icon="play-arrow" onPress={() => {}} historia={item} />
-          <ActionButton type="tertiary" title="Gravar" icon="record-voice-over" onPress={() => {}} historia={item} />
+          <ActionButton type="tertiary" title="Gravar" icon="record-voice-over" onPress={() => {router.push(`/gravar/${item.id}`)}} historia={item} />
           <ActionButton type="secondary" title="Editar" icon="edit" onPress={() => {}} historia={item} />
-          <ActionButton type="outline" icon={item.favoritado ? "favorite" : "favorite-border"} onPress={handleFavoriteToggle} historia={item} />
+          <ActionButton type="danger" icon={item.favoritado ? "favorite" : "favorite-border"} onPress={handleFavoriteToggle} historia={item} />
         </View>
       </View>
     </>

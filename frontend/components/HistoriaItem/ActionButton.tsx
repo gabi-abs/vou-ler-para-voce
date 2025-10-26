@@ -1,6 +1,5 @@
 import { theme } from "@/themes";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function ActionButton({ title, onPress, historia, icon, type}: any) {
@@ -8,20 +7,12 @@ export default function ActionButton({ title, onPress, historia, icon, type}: an
   const buttonTextStyle = type ? { ...styles.actionText, ...(styles as any)[type] } : styles.actionText;
 
   return (
-    <Link
-      href={{
-        pathname: `/gravar/[historiaId]`,
-        params: { historiaId: historia.id },
-      }}
-      asChild
-    >
-      <Pressable style={buttonStyle} onPress={onPress}>
-        <View style={styles.buttonContent}>
-          <MaterialIcons name={icon} size={title ? 20 : 20} />
-          {title && <Text style={buttonTextStyle}>{title}</Text>}
-        </View>
-      </Pressable>
-    </Link>
+    <Pressable style={buttonStyle} onPress={onPress}>
+      <View style={styles.buttonContent}>
+        <MaterialIcons name={icon} size={title ? 20 : 20} color={buttonTextStyle.color} />
+        {title && <Text style={buttonTextStyle}>{title}</Text>}
+      </View>
+    </Pressable>
   );
 }
 
@@ -46,7 +37,8 @@ const styles = StyleSheet.create({
   primary: { ...theme.colors.button.primary },
   secondary: { ...theme.colors.button.secondary },
   tertiary: { ...theme.colors.button.tertiary },
-  outline: {
+  danger: {
     backgroundColor: "transparent",
+    color: "#f75959ff",
   },
 });
