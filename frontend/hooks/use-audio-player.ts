@@ -1,4 +1,4 @@
-import { Audio, AVPlaybackStatusSuccess } from "expo-av";
+import { Audio, AVPlaybackSource, AVPlaybackStatusSuccess } from "expo-av";
 import { useEffect, useRef, useState } from "react";
 import { Alert } from "react-native";
 
@@ -10,7 +10,7 @@ interface UseAudioPlayerReturn {
   formatarMs: (ms: number | null) => string;
 }
 
-export function useAudioPlayer(uri?: string | null): UseAudioPlayerReturn {
+export function useAudioPlayer(source?: AVPlaybackSource | null): UseAudioPlayerReturn {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duracaoMs, setDuracaoMs] = useState<number | null>(null);
   const [posicaoMs, setPosicaoMs] = useState<number | null>(null);
@@ -20,7 +20,7 @@ export function useAudioPlayer(uri?: string | null): UseAudioPlayerReturn {
 
   // carrega o som quando tiver uma URI nova
   async function carregarSom() {
-    if (!uri) {
+    if (!source) {
       Alert.alert("Nada para tocar", "Nenhum áudio foi selecionado ainda.");
       return;
     }
@@ -33,7 +33,7 @@ export function useAudioPlayer(uri?: string | null): UseAudioPlayerReturn {
       }
 
       const { sound, status } = await Audio.Sound.createAsync(
-        { uri },
+        source,
         { shouldPlay: false, progressUpdateIntervalMillis: 250 }, // não toca imediatamente
         onPlaybackStatusUpdate
       );
@@ -70,7 +70,7 @@ export function useAudioPlayer(uri?: string | null): UseAudioPlayerReturn {
   }
 
   async function togglePlayPause() {
-    if (!uri) {
+    if (!source) {
       Alert.alert("Nada para tocar", "Nenhum áudio foi selecionado ainda.");
       return;
     }
@@ -109,7 +109,7 @@ export function useAudioPlayer(uri?: string | null): UseAudioPlayerReturn {
 
   // se a URI mudar externamente (por ex: gravou outro áudio), recarrega o som
   useEffect(() => {
-    if (uri) {
+    if (source) {
       carregarSom();
     } else {
       // sem uri => reseta estado
@@ -122,7 +122,7 @@ export function useAudioPlayer(uri?: string | null): UseAudioPlayerReturn {
         soundRef.current = null;
       }
     }
-  }, [uri]);
+  }, [source]);
 
   function formatarMs(ms: number | null): string {
     if (ms == null) return "00:00";

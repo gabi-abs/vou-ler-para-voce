@@ -3,6 +3,7 @@ import { useAudioPlayer } from "@/hooks/use-audio-player";
 import HistoriasMock from "@/mocks/historias";
 import { theme } from "@/themes";
 import { MaterialIcons } from "@expo/vector-icons";
+import { AVPlaybackSource } from "expo-av";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
@@ -12,7 +13,7 @@ interface Historia {
   titulo: string;
   descricao?: string;
   capaUrl?: string;
-  audioUrl?: string; // URL ou caminho do áudio da história
+  audioUrl?: AVPlaybackSource; // Pode ser URI string ou require()
 }
 
 export default function OuvirHistoriaScreen() {

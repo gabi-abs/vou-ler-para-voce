@@ -1,12 +1,13 @@
 import { useAudioPlayer } from "@/hooks/use-audio-player";
+import { AVPlaybackSource } from "expo-av";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface AudioPlayerProps {
-  uri?: string | null; // caminho do áudio salvo localmente
+  source?: AVPlaybackSource | null; // caminho do áudio (URI string ou require())
 }
 
-export default function AudioPlayer({ uri }: AudioPlayerProps) {
-  const { isPlaying, duracaoMs, posicaoMs, togglePlayPause, formatarMs } = useAudioPlayer(uri);
+export default function AudioPlayer({ source }: AudioPlayerProps) {
+  const { isPlaying, duracaoMs, posicaoMs, togglePlayPause, formatarMs } = useAudioPlayer(source);
 
   return (
     <View style={styles.container}>
@@ -15,10 +16,10 @@ export default function AudioPlayer({ uri }: AudioPlayerProps) {
       <TouchableOpacity
         style={[styles.botao, isPlaying ? styles.botaoPausar : styles.botaoTocar]}
         onPress={togglePlayPause}
-        disabled={!uri}
+        disabled={!source}
       >
         <Text style={styles.textoBotao}>
-          {!uri ? "Sem áudio" : isPlaying ? "Pausar" : "Tocar"}
+          {!source ? "Sem áudio" : isPlaying ? "Pausar" : "Tocar"}
         </Text>
       </TouchableOpacity>
 
