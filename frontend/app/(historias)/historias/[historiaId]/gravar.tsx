@@ -1,9 +1,20 @@
+import HistoriasMock from "@/mocks/historias";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+
+interface Historia {
+  id: string;
+  titulo: string;
+  descricao?: string;
+  capaUrl?: string;
+}
 
 export default function GravarHistoriaScreen() {
-  const { historiaId } = useLocalSearchParams(); // pega o :id da URL
+  const { historiaId } = useLocalSearchParams() as { historiaId: string }; // pega o :id da URL
   const router = useRouter();
+  const [historia, setHistoria] = useState<Historia | null>(null);
 
   function handleIniciarGravacao() {
     // futuramente aqui entra a lógica de microfone
@@ -16,28 +27,45 @@ export default function GravarHistoriaScreen() {
     router.back();
   }
 
+  function buscarHistoriaPorId(id: string): Historia | null {
+    // Mock de busca - em um app real, você buscaria de uma API ou banco de dados
+    const historiasMock: Historia[] = HistoriasMock;
+
+    return historiasMock.find(historia => historia.id === id) || null;
+  }
+
+  useEffect(() => {
+    if (historiaId) {
+      const historiaEncontrada = buscarHistoriaPorId(historiaId);
+      setHistoria(historiaEncontrada);
+    }
+  }, [historiaId]);
+
+
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitulo}>Gravar história</Text>
-      <Text style={styles.subtitulo}>
-        História ID: {historiaId}
-      </Text>
+
+      <View style={styles.capa}>
+        {historia && historia.capaUrl ? (
+          <>
+            <Image source={{ uri: historia.capaUrl }} style={styles.capaImagem} />
+            <Text>{historia.titulo}</Text>
+          </>
+        ) : (
+          <Text>Carregando capa...</Text>
+        )}
+      </View>
+
+      <View>
+        <Text style={styles.descricao}>{historia?.descricao || "Descrição não disponível."}</Text>
+      </View>
 
       <View style={styles.areaGravacao}>
-        <Text style={styles.statusText}>Status: pronto para gravar</Text>
-
         <TouchableOpacity
           style={[styles.botao, styles.botaoPrimario]}
           onPress={handleIniciarGravacao}
         >
           <Text style={styles.botaoTexto}>Iniciar gravação</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.botao, styles.botaoSecundario]}
-          onPress={handleFinalizarGravacao}
-        >
-          <Text style={styles.botaoTexto}>Finalizar e salvar</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -61,12 +89,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   areaGravacao: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 16,
     padding: 20,
-    backgroundColor: "#fafafa",
-    gap: 16,
   },
   statusText: {
     fontSize: 14,
@@ -87,5 +110,21 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
     fontSize: 16,
+  },
+  capa: {
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  capaImagem: {
+    width: 150, 
+    height: 200,
+    resizeMode: "cover",
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  descricao: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 24,
   },
 });

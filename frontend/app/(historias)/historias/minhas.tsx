@@ -1,21 +1,31 @@
+import HistoriasMock from "@/mocks/historias";
 import { Link } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-const historiaLista = [
-  { id: 1, titulo: "Minha Primeira História" , capa: "", descricao: "Descrição da minha primeira história." },
-  { id: 2, titulo: "Aventuras no Mundo React Native" , capa: "", descricao: "Descrição das aventuras no mundo React Native." },
-  { id: 3, titulo: "Explorando o Expo Router" , capa: "", descricao: "Descrição sobre a exploração do Expo Router." },
-]
+interface Historia {
+  id: string;
+  titulo: string;
+  descricao?: string;
+  capaUrl?: string;
+}
 
 export default function VerMinhasHistorias() {
+  const [historiaLista, setHistoriaLista] =  useState<Historia[]>([]);
+
+  useEffect(() => {
+    const historiasMock: Historia[] = HistoriasMock;
+
+    setHistoriaLista(historiasMock);
+  }, []);
+
+
   return (
     <View>
-      <Text>Ver Minhas Historias</Text>
       {historiaLista.map(historia => (
-        <View key={historia.id}>
-          <Text>{historia.titulo}</Text>
-          <Text>{historia.descricao}</Text>
-          <Text>{historia.capa}</Text>
+        <View key={historia.id} style={styles.itemLista}>
+           <Image source={{ uri: historia.capaUrl }} style={styles.capaImagem} />
+            <Text>{historia.titulo}</Text>
           <View>
             <Pressable onPress={() => {}}>
               <Text>Ouvir</Text>
@@ -47,5 +57,16 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#DDDDDD',
     borderRadius: 5,
-  }
+  },
+  capaImagem: {
+    width: 150, 
+    height: 200,
+    resizeMode: "cover",
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  itemLista: {
+    marginBottom: 24,
+    padding: 16
+  },
 });
