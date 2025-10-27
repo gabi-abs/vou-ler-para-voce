@@ -1,74 +1,29 @@
-import { RecordingOptions, useAudioRecorder } from "expo-audio";
-import { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useAudioRecorder } from "@/hooks/use-audio-recorder";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface AudioRecorderProps {
   onFinish?: (uri: string) => void; // callback opcional ao finalizar
+  onError?: (error: unknown) => void; // callback opcional para erros
 }
 
-export default function AudioRecorder({ onFinish }: AudioRecorderProps) {
-  const recordingOptions: RecordingOptions = {
-    extension: ".m4a",
-    sampleRate: 44100,
-    numberOfChannels: 2,
-    bitRate: 128000,
-    android: {
-      outputFormat: "mpeg4",
-      audioEncoder: "aac",
-    },
-    ios: {
-      outputFormat: "mpeg4AAC",
-      audioQuality: 127,
-      linearPCMBitDepth: 16,
-      linearPCMIsBigEndian: false,
-      linearPCMIsFloat: false,
-    },
-    web: {
-      mimeType: "audio/webm",
-      bitsPerSecond: 128000,
-    },
-  };
-
-  const recorder = useAudioRecorder(recordingOptions);
-  const [audioUri, setAudioUri] = useState<string | null>(null);
-
-  async function iniciarGravacao() {
-    try {
-      await recorder.record();
-      setAudioUri(null);
-    } catch (error) {
-      console.error("Erro ao iniciar gravação:", error);
-      Alert.alert("Erro", "Não foi possível iniciar a gravação. Verifique as permissões.");
-    }
-  }
-
-  async function pararGravacao() {
-    try {
-      const uri = await recorder.stop();
-      setAudioUri(uri ?? null);
-
-      if (uri !== null && uri !== undefined) {
-        if (onFinish) onFinish(uri);
-        Alert.alert("Gravação concluída", "O áudio foi salvo com sucesso.");
-      }
-    } catch (error) {
-      console.error("Erro ao parar gravação:", error);
-      Alert.alert("Erro", "Não foi possível parar a gravação.");
-    }
-  }
+export default function AudioRecorder({ onFinish, onError }: AudioRecorderProps) {
+  const { audioUri, isRecording, toggleRecording } = useAudioRecorder({
+    onFinish,
+    onError,
+  });
 
   return (
     <View style={styles.container}>
       <Text style={styles.status}>
-        Status: {recorder.isRecording ? "🎙 Gravando..." : "⏹ Parado"}
+        Status: {isRecording ? "🎙 Gravando..." : "⏹ Parado"}
       </Text>
 
       <TouchableOpacity
-        style={[styles.botao, recorder.isRecording ? styles.botaoParar : styles.botaoGravar]}
-        onPress={recorder.isRecording ? pararGravacao : iniciarGravacao}
+        style={[styles.botao, isRecording ? styles.botaoParar : styles.botaoGravar]}
+        onPress={toggleRecording}
       >
         <Text style={styles.textoBotao}>
-          {recorder.isRecording ? "Parar gravação" : "Iniciar gravação"}
+          {isRecording ? "Parar gravação" : "Iniciar gravação"}
         </Text>
       </TouchableOpacity>
 

@@ -17,6 +17,9 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="index" options={{ presentation: 'modal', headerShown: false }} />
         <Stack.Screen name="(historias)" options={{ headerTitle: 'Voltar' }} />
+        <Stack.Screen name="gravar/[historiaId]" options={{ headerTitle: 'Histórias' }} />
+        <Stack.Screen name="editar/[historiaId]" options={{ headerTitle: 'Histórias' }} />
+        <Stack.Screen name="ouvir/[historiaId]" options={{ headerTitle: 'Histórias'}} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

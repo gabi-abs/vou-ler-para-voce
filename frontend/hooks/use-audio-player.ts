@@ -1,6 +1,6 @@
-import { AudioSource, useAudioPlayer as useExpoAudioPlayer } from "expo-audio";
+import { AudioSource, setAudioModeAsync, useAudioPlayer as useExpoAudioPlayer } from "expo-audio";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Alert } from "react-native";
+import { Alert, Platform } from "react-native";
 
 interface UseAudioPlayerReturn {
   isPlaying: boolean;
@@ -15,10 +15,29 @@ export function useAudioPlayer(source?: AudioSource | null): UseAudioPlayerRetur
   const memoizedSource = useMemo(() => source ?? undefined, [source]);
   const player = useExpoAudioPlayer(memoizedSource);
 
+  const [isPlaying, setIsPlaying] = useState(false);
   const [duracaoMs, setDuracaoMs] = useState<number | null>(null);
   const [posicaoMs, setPosicaoMs] = useState<number | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastSourceRef = useRef<AudioSource | null | undefined>(null);
+
+  // Configura o modo de áudio para iOS
+  useEffect(() => {
+    const setupAudioMode = async () => {
+      try {
+        await setAudioModeAsync({
+          playsInSilentMode: true,
+          shouldPlayInBackground: false,
+        });
+      } catch (error) {
+        // Ignora erros silenciosamente
+      }
+    };
+
+    if (Platform.OS === 'ios') {
+      setupAudioMode();
+    }
+  }, []);
 
   // Limpa o intervalo anterior
   const clearUpdateInterval = useCallback(() => {
@@ -46,6 +65,9 @@ export function useAudioPlayer(source?: AudioSource | null): UseAudioPlayerRetur
 
   // Gerencia a atualização periódica baseada no estado de playing
   useEffect(() => {
+    // Sincroniza o estado local com o player
+    setIsPlaying(player.playing);
+
     clearUpdateInterval();
 
     // Atualiza imediatamente
@@ -66,6 +88,7 @@ export function useAudioPlayer(source?: AudioSource | null): UseAudioPlayerRetur
     // Se a source mudou, para o player atual
     if (lastSourceRef.current !== source) {
       clearUpdateInterval();
+      setIsPlaying(false);
 
       // Não tenta pausar, apenas limpa o intervalo
       // O useAudioPlayer do expo-audio gerencia o ciclo de vida internamente
@@ -81,6 +104,7 @@ export function useAudioPlayer(source?: AudioSource | null): UseAudioPlayerRetur
     } else {
       setPosicaoMs(null);
       setDuracaoMs(null);
+      setIsPlaying(false);
     }
   }, [source, updateProgress, clearUpdateInterval]);
 
@@ -101,14 +125,18 @@ export function useAudioPlayer(source?: AudioSource | null): UseAudioPlayerRetur
     try {
       if (player.playing) {
         player.pause();
+        setIsPlaying(false);
       } else {
-        player.play();
+        await player.play();
+        setIsPlaying(true);
       }
 
       // Força atualização imediata do estado após um pequeno delay
       setTimeout(() => {
         try {
           updateProgress();
+          // Garante sincronização com o estado real do player
+          setIsPlaying(player.playing);
         } catch (error) {
           // Ignora erros silenciosamente
         }
@@ -132,7 +160,7 @@ export function useAudioPlayer(source?: AudioSource | null): UseAudioPlayerRetur
   }
 
   return {
-    isPlaying: player.playing,
+    isPlaying,
     duracaoMs,
     posicaoMs,
     togglePlayPause,
