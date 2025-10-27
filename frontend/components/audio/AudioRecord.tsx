@@ -1,4 +1,5 @@
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
+import { theme } from "@/themes";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface AudioRecorderProps {
@@ -14,10 +15,6 @@ export default function AudioRecorder({ onFinish, onError }: AudioRecorderProps)
 
   return (
     <View style={styles.container}>
-      <Text style={styles.status}>
-        Status: {isRecording ? "🎙 Gravando..." : "⏹ Parado"}
-      </Text>
-
       <TouchableOpacity
         style={[styles.botao, isRecording ? styles.botaoParar : styles.botaoGravar]}
         onPress={toggleRecording}
@@ -26,38 +23,33 @@ export default function AudioRecorder({ onFinish, onError }: AudioRecorderProps)
           {isRecording ? "Parar gravação" : "Iniciar gravação"}
         </Text>
       </TouchableOpacity>
-
-      {audioUri && (
-        <Text style={styles.resultado}>✅ Gravação salva localmente</Text>
-      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
+    padding: 10,
     gap: 12,
-    marginTop: 16,
   },
   status: {
     fontSize: 16,
     fontWeight: "500",
   },
   botao: {
-    width: "80%",
     paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 8,
     alignItems: "center",
   },
   botaoGravar: {
-    backgroundColor: "#6C63FF",
+    backgroundColor: theme.colors.purple,
   },
   botaoParar: {
     backgroundColor: "#D32F2F",
   },
   textoBotao: {
-    color: "#fff",
+    color: theme.colors.purple2,
     fontWeight: "600",
     fontSize: 16,
   },

@@ -1,6 +1,6 @@
-import AudioPlayer from "@/components/audio/AudioPlayer";
 import AudioRecorder from "@/components/audio/AudioRecord";
 import HistoriasMock from "@/mocks/historias";
+import { theme } from "@/themes";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -39,26 +39,26 @@ export default function GravarHistoriaScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.capa}>
-        {historia && historia.capaUrl ? (
-          <>
-            <Image
-              source={{ uri: historia.capaUrl }}
-              style={styles.capaImagem}
-            />
-            <Text>{historia.titulo}</Text>
-          </>
-        ) : (
-          <Text>Carregando capa...</Text>
-        )}
+      <View style={styles.topContainer}>
+        {/* <Text style={styles.titulo}>{historia?.titulo}</Text> */}
+        <View style={styles.capa}>
+          {historia && historia.capaUrl ? (
+            <>
+              <Image
+                source={{ uri: historia.capaUrl }}
+                style={styles.capaImagem}
+              />
+            </>
+          ) : (
+            <Text>Carregando capa...</Text>
+          )}
+        </View>
       </View>
 
-      <ScrollView>
-        <View>
-          <Text style={styles.descricao}>
-            {historia?.descricao || "Descrição não disponível."}
-          </Text>
-        </View>
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.descricao}>
+          {historia?.descricao || "Descrição não disponível."}
+        </Text>
       </ScrollView>
 
       <View style={styles.areaGravacao}>
@@ -67,7 +67,6 @@ export default function GravarHistoriaScreen() {
             salvarAudioUri(uri);
           }}
         />
-        <AudioPlayer source={ultimoAudioUri} />
       </View>
     </View>
   );
@@ -76,8 +75,31 @@ export default function GravarHistoriaScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    backgroundColor: "#fff",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    padding: 16,
+    backgroundColor: theme.colors.background,
+  },
+  topContainer: {
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  capa: {
+    height: 300,
+    width: 300,
+    backgroundColor: theme.colors.background,
+    borderWidth: 10,
+    borderRadius: 8,
+    borderColor: theme.colors.border,
+  },
+  titulo: {
+    ...theme.colors.title1,
+    paddingTop: 20,
+    paddingBottom: 25,
+  },
+  capaImagem: {
+    height: "100%",
+    resizeMode: "cover",
   },
   headerTitulo: {
     fontSize: 20,
@@ -90,7 +112,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   areaGravacao: {
-    padding: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
   },
   statusText: {
     fontSize: 14,
@@ -112,20 +136,20 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
-  capa: {
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  capaImagem: {
-    width: 150,
-    height: 200,
-    resizeMode: "cover",
-    borderRadius: 8,
-    marginBottom: 8,
-  },
   descricao: {
     fontSize: 16,
     color: "#666",
     marginBottom: 24,
+    textAlign: "justify",
+    lineHeight: 22,
   },
+  scrollView: { 
+    flex: 1, 
+    marginBottom: 16,
+    backgroundColor: theme.colors.white,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: 8,
+    padding: 20,
+   },
 });

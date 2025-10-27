@@ -28,4 +28,5 @@ export const colors = {
   yellow: "#FFEDB3",
   green: "#67A782",
   purple: "#7C5CC4",
+  purple2: "#EBE0F6",
 } as any
