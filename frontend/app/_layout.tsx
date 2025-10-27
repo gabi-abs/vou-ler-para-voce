@@ -14,9 +14,9 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Stack screenOptions={{presentation: "card", headerBackTitle: "Voltar", headerTitle: ""}}>
         <Stack.Screen name="index" options={{ presentation: 'modal', headerShown: false }} />
-        <Stack.Screen name="(historias)" options={{ headerTitle: 'Voltar' }} />
+        <Stack.Screen name="(historias)" />
         <Stack.Screen name="gravar/[historiaId]" options={{ headerTitle: 'Histórias' }} />
         <Stack.Screen name="editar/[historiaId]" options={{ headerTitle: 'Histórias' }} />
         <Stack.Screen name="ouvir/[historiaId]" options={{ headerTitle: 'Histórias'}} />
