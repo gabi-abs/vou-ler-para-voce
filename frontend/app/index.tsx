@@ -1,8 +1,8 @@
-import CriarHistoria from "@/assets/svg/criar-historia.svg";
-import Favoritas from "@/assets/svg/favoritas.svg";
-import Historias from "@/assets/svg/historias.svg";
-import Nuvem from "@/assets/svg/nuvem.svg";
-import NuvemRodape from "@/assets/svg/nuvemrodape.svg";
+import CriarHistoriaSVG from "@/assets/svg/criar-historia.svg";
+import FavoritasSVG from "@/assets/svg/favoritas.svg";
+import HistoriasSVG from "@/assets/svg/historias.svg";
+import NuvemSVG from "@/assets/svg/nuvem.svg";
+import NuvemRodapeSVG from "@/assets/svg/nuvemrodape.svg";
 import { theme } from "@/themes";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
@@ -12,9 +12,9 @@ export default function Main() {
     <>
       {/* NUVEM FIXA NO FUNDO */}
       <View style={styles.nuvensContainer}>
-        <Nuvem style={styles.nuvemEsq} width={130} height={130} color="#E6D9F5" />
-        <Nuvem style={styles.nuvemDir} width={130} height={130} color="#E6D9F5" />
-          <NuvemRodape style={styles.nuvemAzul} color="#A8D6F2" />
+        <NuvemSVG style={styles.nuvemEsq} width={130} height={130} color="#E6D9F5" />
+        <NuvemSVG style={styles.nuvemDir} width={130} height={130} color="#E6D9F5" />
+          <NuvemRodapeSVG style={styles.nuvemAzul} color="#A8D6F2" />
       </View>
 
       <View style={styles.container}>
@@ -28,7 +28,7 @@ export default function Main() {
             href="/criar-nova-historia"
           >
             <View style={styles.linkContent}>
-              <CriarHistoria width={40} height={40} />
+              <CriarHistoriaSVG width={40} height={40} />
               <Text style={[styles.linkText, theme.colors.button.secondary]}>
                 Criar Nova História
               </Text>
@@ -40,7 +40,7 @@ export default function Main() {
             href="/minhas"
           >
             <View style={styles.linkContent}>
-              <Historias width={40} height={40} />
+              <HistoriasSVG width={40} height={40} />
               <Text style={[styles.linkText, theme.colors.button.tertiary]}>
                 Ver Minhas Histórias
               </Text>
@@ -52,7 +52,7 @@ export default function Main() {
             href="/favoritas"
           >
             <View style={styles.linkContent}>
-              <Favoritas width={40} height={40} />
+              <FavoritasSVG width={40} height={40} />
               <Text style={[styles.linkText, theme.colors.button.primary]}>
                 Ver Favoritas
               </Text>
