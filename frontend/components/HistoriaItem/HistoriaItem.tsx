@@ -17,7 +17,7 @@ export default function HistoriaItem({ historia }: { historia: Historia }) {
     <>
       <View key={item.id} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Image u source={{ uri: `data:image/jpeg;base64,${item.capa}` }} style={styles.capaImagem} />
+          <Image source={{ uri: item.capa }} style={styles.capaImagem} />
           <View style={styles.cardInfo}>
             <Text style={styles.cardTitle}>{item.titulo}</Text>
             <Text style={styles.cardDescription} numberOfLines={9} ellipsizeMode="tail">

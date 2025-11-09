@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       const { token } = await usuarioService.login();
-      SecureStore.setItemAsync("token", token);
+      SecureStore.setItem("token", token);
     } finally {
       setLoading(false);
     }
