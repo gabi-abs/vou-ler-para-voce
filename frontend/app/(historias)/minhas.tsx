@@ -1,31 +1,20 @@
 import HistoriaItem from "@/components/HistoriaItem/HistoriaItem";
-import HistoriasMock from "@/mocks/historias";
+import { useHistorias } from "@/hooks/use-historias";
 import { theme } from "@/themes";
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-
-interface Historia {
-  id: string;
-  titulo: string;
-  descricao?: string;
-  capaUrl?: string;
-}
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function VerMinhasHistorias() {
-  const [historiaLista, setHistoriaLista] =  useState<Historia[]>([]);
-
-  useEffect(() => {
-    const historiasMock: Historia[] = HistoriasMock;
-
-    setHistoriaLista(historiasMock);
-  }, []);
-
+  const { data: historiaLista, isLoading } = useHistorias();
 
   return (
     <View style={styles.container}>
       <ScrollView>
-        {historiaLista.map(historia => <HistoriaItem key={historia.id} historia={historia} />)}
+        {
+          isLoading ? <View>Carregando...</View> :
+          historiaLista && historiaLista.map(historia => <HistoriaItem key={historia.id} historia={historia} />)
+        }
       </ScrollView>
+      <Text>Em construção...</Text>
     </View>
   )
 }

@@ -1,14 +1,15 @@
+import Historia from "@/interfaces/HistoriaInterface";
 import { theme } from "@/themes";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import ActionButton from "./ActionButton";
 
-export default function HistoriaItem({ historia }: { historia: any }) {
-  const [ item, setItem ] =  useState<any>(historia);
+export default function HistoriaItem({ historia }: { historia: Historia }) {
+  const [ item, setItem ] =  useState<Historia>(historia);
 
   const handleFavoriteToggle = () => {
-    item.favoritado = !item.favoritado;
+    // item.favoritado = !item.favoritado;
     setItem({ ...item });
   };
 
@@ -16,11 +17,11 @@ export default function HistoriaItem({ historia }: { historia: any }) {
     <>
       <View key={item.id} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Image source={{ uri: item.capaUrl }} style={styles.capaImagem} />
+          <Image u source={{ uri: `data:image/jpeg;base64,${item.capa}` }} style={styles.capaImagem} />
           <View style={styles.cardInfo}>
             <Text style={styles.cardTitle}>{item.titulo}</Text>
             <Text style={styles.cardDescription} numberOfLines={9} ellipsizeMode="tail">
-              {item.descricao}
+              {item.texto}
             </Text>
           </View>
         </View>
