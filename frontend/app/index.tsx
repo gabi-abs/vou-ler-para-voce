@@ -1,64 +1,73 @@
 import CriarHistoriaSVG from "@/assets/svg/criar-historia.svg";
 import FavoritasSVG from "@/assets/svg/favoritas.svg";
 import HistoriasSVG from "@/assets/svg/historias.svg";
-import NuvemSVG from "@/assets/svg/nuvem.svg";
-import NuvemRodapeSVG from "@/assets/svg/nuvemrodape.svg";
+
+import LoginScreen from "@/components/LoginScreen/LoginScreen";
+import NuvemBackground from "@/components/NuvemBackgroud/NuvemBackgroud";
+import { useAuth } from "@/context/AuthContext";
 import { theme } from "@/themes";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function Main() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <>
       {/* NUVEM FIXA NO FUNDO */}
-      <View style={styles.nuvensContainer}>
-        <NuvemSVG style={styles.nuvemEsq} width={130} height={130} color="#E6D9F5" />
-        <NuvemSVG style={styles.nuvemDir} width={130} height={130} color="#E6D9F5" />
-          <NuvemRodapeSVG style={styles.nuvemAzul} color="#A8D6F2" />
-      </View>
+      <NuvemBackground style={styles.nuvensContainer} />
 
+      {/** CONTEÚDO PRINCIPAL */}
       <View style={styles.container}>
-        {/* CONTEÚDO PRINCIPAL */}
-        <Text style={styles.title1}>Bem-vindo ao</Text>
-        <Text style={styles.title2}>Vou Ler Para Você!</Text>
+        {!isAuthenticated ? (
+          <LoginScreen />
+        ) : (
+          <>
+            {/* CONTEÚDO PRINCIPAL */}
+            <Text style={styles.title1}>Bem-vindo ao</Text>
+            <Text style={styles.title2}>Vou Ler Para Você!</Text>
 
-        <View style={styles.linksContainer}>
-          <Link
-            style={[styles.link, theme.colors.button.secondary]}
-            href="/criar-nova-historia"
-          >
-            <View style={styles.linkContent}>
-              <CriarHistoriaSVG width={40} height={40} />
-              <Text style={[styles.linkText, theme.colors.button.secondary]}>
-                Criar Nova História
-              </Text>
-            </View>
-          </Link>
+            <View style={styles.linksContainer}>
+              <Link
+                style={[styles.link, theme.colors.button.secondary]}
+                href="/criar-nova-historia"
+              >
+                <View style={styles.linkContent}>
+                  <CriarHistoriaSVG width={40} height={40} />
+                  <Text
+                    style={[styles.linkText, theme.colors.button.secondary]}
+                  >
+                    Criar Nova História
+                  </Text>
+                </View>
+              </Link>
 
-          <Link
-            style={[styles.link, theme.colors.button.tertiary]}
-            href="/minhas"
-          >
-            <View style={styles.linkContent}>
-              <HistoriasSVG width={40} height={40} />
-              <Text style={[styles.linkText, theme.colors.button.tertiary]}>
-                Ver Minhas Histórias
-              </Text>
-            </View>
-          </Link>
+              <Link
+                style={[styles.link, theme.colors.button.tertiary]}
+                href="/minhas"
+              >
+                <View style={styles.linkContent}>
+                  <HistoriasSVG width={40} height={40} />
+                  <Text style={[styles.linkText, theme.colors.button.tertiary]}>
+                    Ver Minhas Histórias
+                  </Text>
+                </View>
+              </Link>
 
-          <Link
-            style={[styles.link, theme.colors.button.primary]}
-            href="/favoritas"
-          >
-            <View style={styles.linkContent}>
-              <FavoritasSVG width={40} height={40} />
-              <Text style={[styles.linkText, theme.colors.button.primary]}>
-                Ver Favoritas
-              </Text>
+              <Link
+                style={[styles.link, theme.colors.button.primary]}
+                href="/favoritas"
+              >
+                <View style={styles.linkContent}>
+                  <FavoritasSVG width={40} height={40} />
+                  <Text style={[styles.linkText, theme.colors.button.primary]}>
+                    Ver Favoritas
+                  </Text>
+                </View>
+              </Link>
             </View>
-          </Link>
-        </View>
+          </>
+        )}
       </View>
     </>
   );
@@ -71,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 20,
-    backgroundColor: "#FFF8E2",
+    zIndex: 2, // 👈 Fica na frente das nuvens (que têm zIndex: 1)
   },
 
   /** ☁️ CAMADA DE FUNDO DAS NUVENS */
@@ -83,24 +92,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     flexDirection: "row",
     zIndex: 1, // 👈 fica atrás de todo o conteúdo
+    backgroundColor: "#FFF8E2",
   },
-  nuvemEsq: {
-    opacity: 0.8,
-  },
-  nuvemDir: {
-    transform: [{ scaleX: -1 }],
-    opacity: 0.8,
-    left: 170
-  },
-
-  /** 💙 NUVEM AZUL CENTRAL (MAIS ABAIXO) */
-  nuvemAzul: {
-    bottom: 0,
-    left: 0,
-    position: "absolute", // 👈 mais abaixo das roxas
-    opacity: 0.7,
-  },
-
 
   /** 🌟 CONTEÚDO */
   title1: {

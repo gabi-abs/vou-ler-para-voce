@@ -10,11 +10,10 @@ export default function VerMinhasHistorias() {
     <View style={styles.container}>
       <ScrollView>
         {
-          isLoading ? <View>Carregando...</View> :
+          isLoading ? <Text>Carregando...</Text> :
           historiaLista && historiaLista.map(historia => <HistoriaItem key={historia.id} historia={historia} />)
         }
       </ScrollView>
-      <Text>Em construção...</Text>
     </View>
   )
 }
@@ -23,6 +22,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.background,
     padding: 10,
+    minHeight: '100%',
   },
   actionButton: {
     marginRight: 10,

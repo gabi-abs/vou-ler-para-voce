@@ -1,38 +1,48 @@
 import { usuarioService } from "@/api/usuarioService";
+import Usuario from "@/interfaces/Usuario";
 import * as SecureStore from "expo-secure-store";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 interface AuthContextData {
-  // usuario?: Usuario | null;
-  // login?: (email: string, senha: string) => Promise<void>;
-  // logout?: () => void;
+  usuario?: Usuario | null;
+  login: (authForm: any) => Promise<void>;
+  logout?: () => void;
   loading: boolean;
+  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    console.log("AuthProvider mounted");
-    login("email", "senha");
-  }, []);
+  function logout() {
+    SecureStore.deleteItemAsync("token");
+    setUsuario(null);
+  }
 
-  async function login(email: string, senha: string) {
-    console.log("login called with", email, senha);
+  async function login(authForm: any) {
     setLoading(true);
     try {
-      const { token } = await usuarioService.login();
-      SecureStore.setItemAsync("token", token);
+      const { token } = await usuarioService.login(authForm);
+      SecureStore.setItem("token", token);
+      setIsAuthenticated(true);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <AuthContext.Provider value={{ /* usuario, login, logout, */ loading }}>
+    <AuthContext.Provider value={{ usuario, login, logout, isAuthenticated, loading }}>
       {children}
     </AuthContext.Provider>
   );
+}
+
+
+// hook customizado para facilitar o uso
+export function useAuth() {
+  return useContext(AuthContext);
 }

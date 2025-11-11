@@ -15,7 +15,7 @@ const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-
+  
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
