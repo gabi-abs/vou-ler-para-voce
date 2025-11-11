@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -33,15 +34,12 @@ public class HistoriaController {
         this.objectMapper = objectMapper;
     }
 
-    @PostMapping(value = "/criar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/criar")
     @Operation(summary = "Criar histórias", description = "Endpoint para criar historias com arquivo")
     public ResponseEntity<?> criarHistoria(
-            @RequestParam("dados") String dadosJson,
-            @RequestParam(value = "arquivo") MultipartFile arquivo) throws IOException {
-
-        HistoriaDTORequest historiaDTORequest = objectMapper.readValue(dadosJson, HistoriaDTORequest.class);
-
-        byte[] conteudo = arquivo.getBytes();
+           @RequestBody HistoriaDTORequest historiaDTORequest) throws IOException {
+        //Mudança da capa para salvar url em vez de a imagem no banco por questao de perfomance, necessario uso de firebase
+        byte[] conteudo = historiaDTORequest.getCapaurl().getBytes(StandardCharsets.UTF_8);
 
         HistoriaDTOResponse response = historiaService.criarHistoria(historiaDTORequest, conteudo);
 
@@ -49,10 +47,17 @@ public class HistoriaController {
     }
 
     @GetMapping("/listar")
-    @Operation(summary="Listar historias", description="Endpoint para listar todos as historias")
+    @Operation(summary="Listar historias ativas", description="Endpoint para listar todos as historias ativas do usuário logado")
     public ResponseEntity<List<HistoriaDTOResponse>> listarHistorias() {
-        return ResponseEntity.ok(historiaService.listarHistorias());
+        return ResponseEntity.ok(historiaService.listarHistoriasAtivosDoUsuario());
     }
+
+    @GetMapping("/favoritas")
+    @Operation(summary="Minhas histórias favoritas", description="Lista apenas as histórias que o usuário favoritou")
+    public ResponseEntity<List<HistoriaDTOResponse>> listarHistoriasFavoritas() {
+        return ResponseEntity.ok(historiaService.listarHistoriasFavoritasDoUsuario());
+    }
+
 
     @GetMapping("/listarPorHistoriaId/{historiaId}")
     @Operation(summary="Listar historias pelo id", description="Endpoint para listar a historia pelo id")

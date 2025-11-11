@@ -44,9 +44,8 @@ public class SecurityConfiguration {
             "/api/trilhasonora/{id}",
 
             // Áudio (listar/baixar/play) — criação / deleção restritas abaixo
-            "/api/audio/**"
-
-
+            "/api/audio/**",
+            "/audios/**"
     };
 
     // Endpoints que só podem ser acessador por usuários com permissão de cliente
@@ -56,6 +55,8 @@ public class SecurityConfiguration {
             "/api/historia/atualizar/**",
             "/api/historia/deletar/**",         // deleta próprias histórias
             "/api/historia/vincularTrilha/**", // vincular/remover trilha de uma história (opcional)
+            "/api/historia/listar",
+            "/api/historia/favoritas/**", // historias favoritas de um usuario
 
             // Áudio (ações do próprio usuário)
             "/api/audio/criar",
@@ -65,7 +66,11 @@ public class SecurityConfiguration {
             // Favoritos (somente do usuário)
             "/api/favorito/adicionar",
             "/api/favorito/remover",
-            "/api/favorito/usuario/**"
+            "/api/favorito/usuario/**",
+            "/api/usuario/listar",
+
+            "/api/usuario/deletar/**",
+
 
     };
 
@@ -76,13 +81,13 @@ public class SecurityConfiguration {
             "/api/trilhasonora/deletar/**",
 
             // Usuário (admin full control)
-            "/api/usuario/listar",
+            //"/api/usuario/listar",
             "/api/usuario/atualizarUsuario/**",
-            "/api/usuario/deletar/**",
+            //"/api/usuario/deletar/**",
             "/api/usuario/listarPorUsuarioid/**",
 
             // Moderação / gestão global (admin pode deletar/editar histórias e áudios de qualquer usuário se necessário)
-            "/api/historia/deletar/**",
+           // "/api/historia/deletar/**",
             "/api/historia/atualizar/**",
             "/api/audio/deletar/**",
             "/api/audio/atualizar/**"

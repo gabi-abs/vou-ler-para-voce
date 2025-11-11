@@ -1,6 +1,7 @@
 package com.voulerparavoce.dto.response;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -58,8 +59,8 @@ public class HistoriaDTOResponse {
         this.usuarioId = usuarioId;
     }
 
-    public byte[] getCapa() {
-        return capa;
+    public String getCapa() {
+        return new String(capa, StandardCharsets.UTF_8);
     }
 
     public void setCapa(byte[] capa) {

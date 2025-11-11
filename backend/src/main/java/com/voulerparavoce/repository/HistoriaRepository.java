@@ -11,9 +11,16 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface HistoriaRepository extends JpaRepository<Historia, Integer> {
+    @Query("""
+    SELECT DISTINCT h
+    FROM Historia h
+    JOIN h.favoritos f
+    WHERE h.status = 1 AND f.usuario.id = :usuarioId
+""")
+    List<Historia> listarHistoriasFavoritadasPorUsuario(@Param("usuarioId") Integer usuarioId);
 
-    @Query("SELECT h FROM Historia h WHERE h.status = 1")
-    List<Historia> listarHistoriasAtivos();
+    @Query("SELECT h FROM Historia h WHERE h.status = 1 AND h.usuario.id = :usuarioId")
+    List<Historia> listarHistoriasAtivosPorUsuario(@Param("usuarioId") Integer usuarioId);
 
     @Query(
     """

@@ -6,7 +6,7 @@ public class HistoriaDTORequest {
 
     private String titulo;
 
-    private byte[] capa;
+    private String capaurl;
 
     private int status;
 
@@ -20,15 +20,6 @@ public class HistoriaDTORequest {
     public HistoriaDTORequest() {}
 
 
-    public HistoriaDTORequest(String titulo, byte[] capa, int status, String texto, Integer usuarioId, List<Integer> trilhaSonoraId) {
-        this.titulo = titulo;
-        this.capa = capa;
-        this.status = status;
-        this.texto = texto;
-        this.usuarioId = usuarioId;
-        this.trilhaSonoraId = trilhaSonoraId;
-    }
-
     public String getTitulo() {
         return titulo;
     }
@@ -37,12 +28,12 @@ public class HistoriaDTORequest {
         this.titulo = titulo;
     }
 
-    public byte[] getCapa() {
-        return capa;
+    public String getCapaurl() {
+        return capaurl;
     }
 
-    public void setCapa(byte[] capa) {
-        this.capa = capa;
+    public void setCapaurl(String capaurl) {
+        this.capaurl = capaurl;
     }
 
     public int getStatus() {

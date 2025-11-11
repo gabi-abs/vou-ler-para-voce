@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +46,7 @@ public class HistoriaService {
     public HistoriaDTOResponse criarHistoria(HistoriaDTORequest historiaDTORequest, byte[] conteudo) {
         Historia historia = new Historia();
         historia.setTitulo(historiaDTORequest.getTitulo());
-        historia.setCapa(historiaDTORequest.getCapa() != null ? historiaDTORequest.getCapa() : conteudo);
+        historia.setCapa(conteudo);
         historia.setTexto(historiaDTORequest.getTexto());
         historia.setDataCriacao(LocalDateTime.now());
         historia.setStatus(historiaDTORequest.getStatus());
@@ -68,8 +69,28 @@ public class HistoriaService {
         return response;
     }
 
-    public List<HistoriaDTOResponse> listarHistorias() {
-        List<Historia> historias = historiaRepository.listarHistoriasAtivos();
+    public List<HistoriaDTOResponse> listarHistoriasAtivosDoUsuario() {
+        String emailUsuario = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        List<Historia> historias = historiaRepository.listarHistoriasAtivosPorUsuario(usuario.getId());
+
+        return mapParaDTO(historias);
+    }
+
+    public List<HistoriaDTOResponse> listarHistoriasFavoritasDoUsuario() {
+        String emailUsuario = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        List<Historia> historias = historiaRepository.listarHistoriasFavoritadasPorUsuario(usuario.getId());
+
+        return mapParaDTO(historias);
+    }
+
+    // Método auxiliar para evitar repetir código
+    private List<HistoriaDTOResponse> mapParaDTO(List<Historia> historias) {
         return historias.stream()
                 .map(historia -> {
                     HistoriaDTOResponse dto = modelMapper.map(historia, HistoriaDTOResponse.class);
@@ -107,15 +128,7 @@ public class HistoriaService {
         historia.setStatus(historiaDTORequest.getStatus());
 
         // Atualiza capa: mantém a antiga se não vier nada novo
-        if (historiaDTORequest.getCapa() != null) {
-            historia.setCapa(historiaDTORequest.getCapa());
-        } else if (conteudo != null) {
-            historia.setCapa(conteudo);
-        } else {
-            // se mandou null explicitamente e não tem arquivo, apaga a capa
-            historia.setCapa(null);
-        }
-
+        historia.setCapa(conteudo);
 
         // Atualiza usuário (se informado)
         if (historiaDTORequest.getUsuarioId() != null) {
