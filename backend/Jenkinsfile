@@ -14,7 +14,7 @@ pipeline {
                     env.PATH = "/usr/bin:$PATH"
                     // Instalar as dependências Maven antes de compilar o projeto
                       dir('backend') {
-                        bat 'mvn clean install'
+                        sh 'mvn clean install'
                       }
                 }
             }
@@ -28,7 +28,7 @@ pipeline {
 
                      // Construir a imagem Docker
                     dir('backend') {
-                        bat "docker build -t ${imageTag} ."
+                        sh "docker build -t ${imageTag} ."
                     }
                  }
             }
@@ -44,7 +44,7 @@ pipeline {
             		bat "docker rm -v ${appName} || exit 0"  // Remover o container e os volumes associados
 
                     // Executar o novo container
-                   // bat "docker-compose up -d --build"
+                       sh "docker-compose up -d --build"
                 }
             }
         }
