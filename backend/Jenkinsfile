@@ -26,9 +26,10 @@ pipeline {
                     def appName = 'voulerparavoce'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
-                    // Construir a imagem Docker
-                    bat "docker build -t ${imageTag} ."
-                }
+                     // Construir a imagem Docker
+                    dir('backend') {
+                        bat "docker build -t ${imageTag} ."
+                    }
             }
         }
 
