@@ -24,7 +24,7 @@ public interface HistoriaRepository extends JpaRepository<Historia, Integer> {
 
     @Query(
     """
-    SELECT DISTINCT h 
+    SELECT DISTINCT h
     FROM Historia h
     LEFT JOIN FETCH h.audios a
     WHERE h.id = :id

@@ -1,7 +1,7 @@
 import CapaSelector from "@/components/ui/CapaSelector";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState } from "react";
+import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function CriarNovaHistoria() {
   const [titulo, setTitulo] = useState("");
@@ -24,37 +24,43 @@ export default function CriarNovaHistoria() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Criar Nova História</Text>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView 
+          // contentContainerStyle={{ paddingBottom: 200 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Text style={styles.titulo}>Criar Nova História</Text>
 
-      <CapaSelector value={capaUri} onChange={setCapaUri} />
+          <CapaSelector value={capaUri} onChange={setCapaUri} />
 
-      <Text style={styles.label}>Título</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Digite o título.."
-        placeholderTextColor="#AF9D8D"
-        value={titulo}
-        onChangeText={setTitulo}
-      />
+          <Text style={styles.label}>Título</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o título.."
+            placeholderTextColor="#AF9D8D"
+            value={titulo}
+            onChangeText={setTitulo}
+          />
 
-      <Text style={styles.label}>Descrição</Text>
-      <TextInput
-        style={[styles.input, styles.textarea]}
-        placeholder="Digite a sua história aqui.."
-        placeholderTextColor="#AF9D8D"
-        multiline
-        numberOfLines={4}
-        value={descricao}
-        onChangeText={setDescricao}
-      />
+          <Text style={styles.label}>Descrição</Text>
+          <TextInput
+            style={[styles.input, styles.textarea]}
+            placeholder="Digite a sua história aqui.."
+            placeholderTextColor="#AF9D8D"
+            multiline
+            numberOfLines={4}
+            value={descricao}
+            onChangeText={setDescricao}
+          />
 
-      <View>
-        <Pressable style={styles.botaoSalvar} onPress={handleSalvar}>
-          <Text style={styles.textoBotaoSalvar}>Salvar História</Text>
-        </Pressable>
-      </View>
-    </View>
+          <Pressable style={styles.botaoSalvar} onPress={handleSalvar}>
+            <Text style={styles.textoBotaoSalvar}>Salvar História</Text>
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
   );
 }
 
@@ -92,18 +98,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   botaoSalvar: {
-    margin: 24,
-    backgroundColor: "#FFE187",
+    // margin: 24,
+    // backgroundColor: "#FFE187",
+    // borderRadius: 20,
+    // height: 50,
+    // borderWidth: 2,
+    // borderColor: "#E9C66C",
+    // paddingVertical: 12,
     borderRadius: 20,
-    height: 50,
-    borderWidth: 2,
-    borderColor: "#E9C66C",
-    paddingVertical: 12,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    backgroundColor: '#FFEDB3',
   },
   textoBotaoSalvar: {
-    color: "#D16314",
+    // color: "#D16314",
     textAlign: "center",
+    // fontWeight: "bold",
+    // fontSize: 22,
+    fontSize: 18,
+    color: '#C3782C',
     fontWeight: "bold",
-    fontSize: 20,
+    paddingHorizontal: 10,
   },
 });

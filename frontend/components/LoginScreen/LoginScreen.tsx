@@ -7,6 +7,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
+
   const handleLogin = () => {
     const form = {
       email: email,
@@ -16,7 +17,17 @@ export default function LoginScreen() {
   };
 
   return (
+    
     <View style={styles.container}>
+
+    <View>
+    <Text style={styles.titulo} > Vou ler</Text>
+    </View>
+
+    <View>
+      <Text style={styles.titulo2}> para você </Text>
+    </View>
+
       <TextInput 
         placeholder="Email" 
         value={email}
@@ -24,6 +35,7 @@ export default function LoginScreen() {
         autoCapitalize="none"
         keyboardType="email-address"
         style={styles.input} 
+        
       />
       <TextInput 
         placeholder="Senha" 
@@ -35,13 +47,45 @@ export default function LoginScreen() {
 
 
       <Pressable style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>LOGIN</Text>
+        <Text style={styles.buttonText}>Entrar</Text>
       </Pressable>
+
+      <Pressable>
+        <Text style={styles.buttonText3} >Esqueci minha senha</Text>
+      </Pressable>
+
+      <View>
+        <Text style={styles.text} >Ainda não tem conta?</Text>
+      </View>
+
+      <View>
+        <Pressable>
+          <Text style={styles.buttonText2}>Cadastre-se</Text>
+        </Pressable>
+      </View>
+
     </View>
+    
+
   );
 }
 
 const styles = StyleSheet.create({
+
+  titulo:{
+    color: "#D87443",
+    fontWeight: "bold",
+    fontSize: 60,
+    
+    
+  },
+  titulo2:{
+    color: "#D87443",
+    fontWeight: "bold",
+    fontSize: 66,
+    paddingBottom: 28
+
+  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -50,22 +94,41 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
+    borderColor: "#EAE0EF",
+    borderRadius: 10,
     padding: 12,
-    width: 250,
-    backgroundColor: "#fff",
+    width: 300,
+    backgroundColor: "#FFFFFD",
   },
   button: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#fee19c",
     padding: 12,
-    borderRadius: 4,
+    borderRadius: 10,
     alignItems: "center",
-    width: 250,
+    width: 300,
     marginTop: 8,
   },
   buttonText: {
-    color: "#fff",
+    color: "#804825",
     fontWeight: "bold",
+    fontSize: 18
   },  
+  text:{
+    color: "#766964",
+    marginTop: 35,
+    fontSize: 20,
+   
+  },
+  buttonText2:{
+    color: "#1D0E85",
+    fontWeight: "bold",
+    fontSize: 21,
+    marginTop: 8,
+  },
+  buttonText3:{
+    color: "#1D0E85",
+    fontWeight: "bold",
+    fontSize: 15,
+    marginTop: 8,
+  }
 });

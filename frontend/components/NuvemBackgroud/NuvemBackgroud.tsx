@@ -1,8 +1,15 @@
 import NuvemSVG from "@/assets/svg/nuvem.svg";
 import NuvemRodapeSVG from "@/assets/svg/nuvemrodape.svg";
+import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
 export default function NuvemBackground({ style }: { style?: object }) {
+  
+
+  useEffect(() => {
+
+  }, [])
+
   return (
     <View style={[styles.nuvensContainer, style]}>
       <NuvemSVG

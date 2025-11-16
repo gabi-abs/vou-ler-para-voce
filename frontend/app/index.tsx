@@ -74,7 +74,7 @@ export default function Main() {
 }
 
 const styles = StyleSheet.create({
-  /** 🌈 CONTAINER PRINCIPAL */
+  /** CONTAINER PRINCIPAL */
   container: {
     flex: 1,
     justifyContent: "center",
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     zIndex: 2, // 👈 Fica na frente das nuvens (que têm zIndex: 1)
   },
 
-  /** ☁️ CAMADA DE FUNDO DAS NUVENS */
+  /** CAMADA DE FUNDO DAS NUVENS */
   nuvensContainer: {
     position: "absolute",
     top: 35,
@@ -91,16 +91,16 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     flexDirection: "row",
-    zIndex: 1, // 👈 fica atrás de todo o conteúdo
+    zIndex: 1, // fica atrás de todo o conteúdo
     backgroundColor: "#FFF8E2",
   },
 
-  /** 🌟 CONTEÚDO */
+  /** CONTEÚDO */
   title1: {
     color: "#D87443",
     fontWeight: "bold",
     fontSize: 30,
-    zIndex: 1, // 👈 garante que fique na frente das nuvens
+    zIndex: 1, // garante que fique na frente das nuvens
   },
   title2: {
     color: "#7C5CC4",
