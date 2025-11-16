@@ -13,7 +13,9 @@ pipeline {
                     // Atualiza o PATH se necessário
                     env.PATH = "/usr/bin:$PATH"
                     // Instalar as dependências Maven antes de compilar o projeto
-                    bat 'mvn clean install'  // Instala as dependências do Maven
+                      dir('backend') {
+                        sh 'mvn clean install'
+                      }
                 }
             }
         }
@@ -24,12 +26,13 @@ pipeline {
                     def appName = 'voulerparavoce'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
-                    // Construir a imagem Docker
-                    bat "docker build -t ${imageTag} ."
-                }
+                     // Construir a imagem Docker
+                    dir('backend') {
+                        sh "docker build -t ${imageTag} ."
+                    }
+                 }
             }
-        }
-
+         }
         stage('Fazer Deploy') {
             steps {
                 script {
@@ -41,7 +44,7 @@ pipeline {
             		bat "docker rm -v ${appName} || exit 0"  // Remover o container e os volumes associados
 
                     // Executar o novo container
-                   // bat "docker-compose up -d --build"
+                       sh "docker-compose up -d --build"
                 }
             }
         }
