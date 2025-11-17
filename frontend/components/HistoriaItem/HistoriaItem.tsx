@@ -9,7 +9,7 @@ export default function HistoriaItem({ historia }: { historia: Historia }) {
   const [ item, setItem ] =  useState<Historia>(historia);
 
   const handleFavoriteToggle = () => {
-    // item.favoritado = !item.favoritado;
+    item.favoritado = !item.favoritado;
     setItem({ ...item });
   };
 
