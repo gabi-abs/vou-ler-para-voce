@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AgentMigrationStateService">
+    <option name="pendingSessionIds">
+      <option value="2effb306-8f44-413b-a22b-a629a0249adc" />
+    </option>
+    <option name="pendingTurns">
+      <map>
+        <entry key="2effb306-8f44-413b-a22b-a629a0249adc">
+          <value>
+            <set>
+              <option value="d306fdbd-02f0-4f1b-bd13-fdb1faa055b5" />
+              <option value="a7a1bbb5-2bfb-44b4-b847-4f8ef9b06731" />
+              <option value="243f5783-2090-422d-b852-404b89d32096" />
+            </set>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <pendingWorkingSetItems>
+      <entry key="2effb306-8f44-413b-a22b-a629a0249adc">
+        <set>
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/service/UsuarioService.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/controller/UsuarioController.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/controller/HistoriaController.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/config/UserAuthenticationFilter.java" />
+        </set>
+      </entry>
+    </pendingWorkingSetItems>
+  </component>
+</project>

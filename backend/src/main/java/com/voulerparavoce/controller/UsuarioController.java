@@ -72,4 +72,11 @@ public class UsuarioController {
         return ResponseEntity.noContent().build(); // 204 sem corpo
     }
 
+    @GetMapping("/user-info")
+    @Operation(summary = "Obter informações do usuário autenticado", description = "Retorna os dados do usuário logado no sistema")
+    public ResponseEntity<UsuarioDTOResponse> obterInfoUsuarioAutenticado() {
+        UsuarioDTOResponse usuarioDTO = usuarioService.obterInfoUsuarioAutenticado();
+        return ResponseEntity.ok(usuarioDTO);
+    }
+
 }

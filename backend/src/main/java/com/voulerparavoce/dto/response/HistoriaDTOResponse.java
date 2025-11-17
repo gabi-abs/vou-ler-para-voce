@@ -60,11 +60,22 @@ public class HistoriaDTOResponse {
     }
 
     public String getCapa() {
-        return new String(capa, StandardCharsets.UTF_8);
+        if (capa != null) {
+            return new String(capa, StandardCharsets.UTF_8);
+        }
+        return null;
     }
 
     public void setCapa(byte[] capa) {
         this.capa = capa;
+    }
+
+    // Método auxiliar para obter a URL da capa como String
+    public String getCapaUrl() {
+        if (capa != null) {
+            return new String(capa, StandardCharsets.UTF_8);
+        }
+        return null;
     }
 
     public String getTitulo() {

@@ -1,26 +1,93 @@
+import { historiaService } from "@/api/historiaService";
 import CapaSelector from "@/components/ui/CapaSelector";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput } from "react-native";
 
 export default function CriarNovaHistoria() {
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [capaUri, setCapaUri] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { usuario } = useAuth();
 
-  function handleSalvar() {
+  async function handleSalvar() {
     if (!titulo.trim()) {
       Alert.alert("Atenção", "Por favor, insira o título da história.");
       return;
     }
 
-    Alert.alert(
-      "História salva!",
-      `Título: ${titulo}\nDescrição: ${descricao}\nCapa: ${capaUri ? "Selecionada" : "Nenhuma"}`
-    );
+    if (!descricao.trim()) {
+      Alert.alert("Atenção", "Por favor, insira a descrição da história.");
+      return;
+    }
 
-    router.navigate("/minhas");
+    if (!usuario?.id) {
+      Alert.alert("Erro", "Usuário não autenticado.");
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      const dados = {
+        titulo,
+        texto: descricao,
+        status: 1,
+        usuarioId: usuario.id,
+        trilhaSonoraId: []
+      };
+
+      let arquivo = undefined;
+      if (capaUri) {
+        const fileName = capaUri.split('/').pop() || 'capa.jpg';
+        // Detectar extensão do arquivo
+        const extension = fileName.split('.').pop()?.toLowerCase() || 'jpg';
+        
+        // Mapear extensão para tipo MIME correto
+        const mimeTypes: { [key: string]: string } = {
+          'jpg': 'image/jpeg',
+          'jpeg': 'image/jpeg',
+          'png': 'image/png',
+          'webp': 'image/webp',
+          'gif': 'image/gif',
+        };
+        
+        const fileType = mimeTypes[extension] || 'image/jpeg';
+        
+        // iOS precisa remover file://, Android mantém como está
+        arquivo = {
+          uri: Platform.OS === 'ios' ? capaUri.replace('file://', '') : capaUri,
+          name: fileName,
+          type: fileType
+        };
+        
+        console.log('Arquivo preparado para upload:', arquivo);
+      }
+
+      await historiaService.criar(dados, arquivo);
+      
+      Alert.alert(
+        "Sucesso!",
+        "História criada com sucesso!",
+        [
+          {
+            text: "OK",
+            onPress: () => router.navigate("/(historias)/minhas")
+          }
+        ]
+      );
+    } catch (error: any) {
+      console.error("Erro ao criar história:", error);
+      Alert.alert(
+        "Erro",
+        error?.response?.data?.message || "Não foi possível criar a história. Tente novamente."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -56,8 +123,16 @@ export default function CriarNovaHistoria() {
             onChangeText={setDescricao}
           />
 
-          <Pressable style={styles.botaoSalvar} onPress={handleSalvar}>
-            <Text style={styles.textoBotaoSalvar}>Salvar História</Text>
+          <Pressable 
+            style={[styles.botaoSalvar, loading && styles.botaoDesabilitado]} 
+            onPress={handleSalvar}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#C3782C" />
+            ) : (
+              <Text style={styles.textoBotaoSalvar}>Salvar História</Text>
+            )}
           </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -119,5 +194,8 @@ const styles = StyleSheet.create({
     color: '#C3782C',
     fontWeight: "bold",
     paddingHorizontal: 10,
+  },
+  botaoDesabilitado: {
+    opacity: 0.6,
   },
 });

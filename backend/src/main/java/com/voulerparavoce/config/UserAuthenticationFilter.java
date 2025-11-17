@@ -63,6 +63,8 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         // Verifica se o endpoint não está na lista de públicos definidos no SecurityConfiguration
         return !Arrays.asList(SecurityConfiguration.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).contains(requestURI) &&
+                !requestURI.contains("imagens/") &&
+                !requestURI.contains("audios/") &&
                 !requestURI.startsWith("/swagger-ui") &&
                 !requestURI.startsWith("/v3/api-docs");
     }

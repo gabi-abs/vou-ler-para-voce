@@ -2,28 +2,22 @@ package com.voulerparavoce.service;
 
 import com.voulerparavoce.dto.request.HistoriaDTORequest;
 import com.voulerparavoce.dto.response.HistoriaDTOResponse;
-import com.voulerparavoce.dto.response.UsuarioDTOResponse;
 import com.voulerparavoce.entity.Historia;
 import com.voulerparavoce.entity.TrilhaSonora;
 import com.voulerparavoce.entity.Usuario;
 import com.voulerparavoce.repository.HistoriaRepository;
 import com.voulerparavoce.repository.TrilhaSonoraRepository;
 import com.voulerparavoce.repository.UsuarioRepository;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class HistoriaService {
@@ -31,22 +25,33 @@ public class HistoriaService {
     private HistoriaRepository historiaRepository;
     private UsuarioRepository usuarioRepository;
     private TrilhaSonoraRepository trilhaSonoraRepository;
+    private ImagemUploadService imagemUploadService;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public HistoriaService(TrilhaSonoraRepository trilhaSonoraRepository, UsuarioRepository usuarioRepository, HistoriaRepository historiaRepository) {
+    public HistoriaService(TrilhaSonoraRepository trilhaSonoraRepository,
+                          UsuarioRepository usuarioRepository,
+                          HistoriaRepository historiaRepository,
+                          ImagemUploadService imagemUploadService) {
         this.trilhaSonoraRepository = trilhaSonoraRepository;
         this.usuarioRepository = usuarioRepository;
         this.historiaRepository = historiaRepository;
+        this.imagemUploadService = imagemUploadService;
     }
 
 
     @Transactional
-    public HistoriaDTOResponse criarHistoria(HistoriaDTORequest historiaDTORequest, byte[] conteudo) {
+    public HistoriaDTOResponse criarHistoria(HistoriaDTORequest historiaDTORequest, byte[] conteudo, String nomeArquivo) throws IOException {
         Historia historia = new Historia();
         historia.setTitulo(historiaDTORequest.getTitulo());
-        historia.setCapa(conteudo);
+
+        // Faz upload da imagem e obtém a URL
+        if (conteudo != null && nomeArquivo != null) {
+            String urlImagem = imagemUploadService.uploadImagem(conteudo, nomeArquivo);
+            historia.setCapa(urlImagem.getBytes());
+        }
+
         historia.setTexto(historiaDTORequest.getTexto());
         historia.setDataCriacao(LocalDateTime.now());
         historia.setStatus(historiaDTORequest.getStatus());
@@ -118,7 +123,7 @@ public class HistoriaService {
     }
 
     @Transactional
-    public HistoriaDTOResponse atualizarHistoria(Integer historiaId, HistoriaDTORequest historiaDTORequest, byte[] conteudo) {
+    public HistoriaDTOResponse atualizarHistoria(Integer historiaId, HistoriaDTORequest historiaDTORequest, byte[] conteudo, String nomeArquivo) throws IOException {
         Historia historia = historiaRepository.findById(historiaId)
                 .orElseThrow(() -> new EntityNotFoundException("História não encontrada com id: " + historiaId));
 
@@ -127,8 +132,11 @@ public class HistoriaService {
         historia.setTexto(historiaDTORequest.getTexto());
         historia.setStatus(historiaDTORequest.getStatus());
 
-        // Atualiza capa: mantém a antiga se não vier nada novo
-        historia.setCapa(conteudo);
+        // Atualiza capa: faz upload da nova imagem se fornecida, deletando a antiga
+        if (conteudo != null && nomeArquivo != null) {
+            String urlImagem = imagemUploadService.atualizarImagem(conteudo, nomeArquivo, historia.getCapa());
+            historia.setCapa(urlImagem.getBytes());
+        }
 
         // Atualiza usuário (se informado)
         if (historiaDTORequest.getUsuarioId() != null) {
