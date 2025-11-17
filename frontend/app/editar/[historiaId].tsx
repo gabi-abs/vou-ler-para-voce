@@ -1,66 +1,66 @@
 import CapaSelector from "@/components/ui/CapaSelector";
-import HistoriasMock from "@/mocks/historias";
+import { historiaService } from "@/api/historiaService";
+import Historia from "@/interfaces/HistoriaInterface";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-
-interface Historia {
-  id: string;
-  titulo: string;
-  descricao?: string;
-  capaUrl?: string;
-}
+import { useEffect, useState } from "react";
+import { Alert, Pressable, StyleSheet, Text, TextInput, View, ActivityIndicator } from "react-native";
 
 export default function EditarHistoriaScreen() {
-  const { historiaId } = useLocalSearchParams() as { historiaId: string };
+  const { historiaId, historia: historiaParam } = useLocalSearchParams() as { historiaId: string; historia: string };
   const router = useRouter();
 
-  const historiaAtual: Historia | undefined = useMemo(() => {
-    return (HistoriasMock as Historia[]).find((h) => h.id === historiaId);
-  }, [historiaId]);
+  const historiaAtual: Historia = JSON.parse(historiaParam);
 
-  const [titulo, setTitulo] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [capaUri, setCapaUri] = useState<string | undefined>(undefined);
+  const [titulo, setTitulo] = useState(historiaAtual.titulo || "");
+  const [texto, setTexto] = useState(historiaAtual.texto || "");
+  const [capaUri, setCapaUri] = useState<string | undefined>(historiaAtual.capa);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (historiaAtual) {
-      setTitulo(historiaAtual.titulo || "");
-      setDescricao(historiaAtual.descricao || "");
-      setCapaUri(historiaAtual.capaUrl);
-    }
-  }, [historiaAtual]);
-
-  function handleSalvar() {
+  async function handleSalvar() {
     if (!titulo.trim()) {
       Alert.alert("Atenção", "Por favor, insira o título da história.");
       return;
     }
 
-    // Atualiza no mock em memória (efeito apenas durante a execução do app)
-    const lista = HistoriasMock as Historia[];
-    const index = lista.findIndex((h) => h.id === historiaId);
-    if (index >= 0) {
-      lista[index] = {
-        ...lista[index],
-        titulo: titulo.trim(),
-        descricao: descricao,
-        capaUrl: capaUri || lista[index].capaUrl,
-      };
+    if (!texto.trim()) {
+      Alert.alert("Atenção", "Por favor, insira o texto da história.");
+      return;
     }
 
-    Alert.alert("História atualizada!", "Suas alterações foram salvas.");
-    router.navigate("/minhas");
-  }
+    setIsLoading(true);
 
-  if (!historiaAtual) {
-    return (
-      <View style={[styles.container, { justifyContent: "center" }]}>
-        <Text style={{ textAlign: "center" }}>
-          História não encontrada. Volte e tente novamente.
-        </Text>
-      </View>
-    );
+    try {
+      const dados = {
+        titulo: titulo.trim(),
+        texto: texto.trim(),
+        status: historiaAtual.status,
+        usuarioId: historiaAtual.usuarioId,
+        trilhaSonoraId: historiaAtual.trilhaSonoraId,
+      };
+
+      // Verifica se a capa foi alterada
+      let arquivo: { uri: string; name: string; type: string } | undefined;
+      if (capaUri && capaUri !== historiaAtual.capa) {
+        arquivo = {
+          uri: capaUri,
+          name: `capa_${Date.now()}.jpg`,
+          type: 'image/jpeg',
+        };
+      }
+
+      await historiaService.atualizar(historiaAtual.id, dados, arquivo);
+      
+      Alert.alert("Sucesso!", "História atualizada com sucesso.");
+      router.back();
+    } catch (error: any) {
+      console.error('Erro ao atualizar história:', error);
+      Alert.alert(
+        "Erro",
+        error.response?.data?.message || "Não foi possível atualizar a história. Tente novamente."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -78,20 +78,24 @@ export default function EditarHistoriaScreen() {
         onChangeText={setTitulo}
       />
 
-      <Text style={styles.label}>Descrição</Text>
+      <Text style={styles.label}>Texto da História</Text>
       <TextInput
         style={[styles.input, styles.textarea]}
         placeholder="Edite a sua história aqui.."
         placeholderTextColor="#AF9D8D"
         multiline
         numberOfLines={4}
-        value={descricao}
-        onChangeText={setDescricao}
+        value={texto}
+        onChangeText={setTexto}
       />
 
       <View>
-        <Pressable style={styles.botaoSalvar} onPress={handleSalvar}>
-          <Text style={styles.textoBotaoSalvar}>Salvar alterações</Text>
+        <Pressable style={styles.botaoSalvar} onPress={handleSalvar} disabled={isLoading}>
+          {isLoading ? (
+            <ActivityIndicator color="#D16314" />
+          ) : (
+            <Text style={styles.textoBotaoSalvar}>Salvar alterações</Text>
+          )}
         </Pressable>
       </View>
     </View>

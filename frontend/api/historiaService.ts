@@ -9,6 +9,14 @@ interface CriarHistoriaDTO {
   trilhaSonoraId?: number[];
 }
 
+interface AtualizarHistoriaDTO {
+  titulo: string;
+  texto: string;
+  status: number;
+  usuarioId: number;
+  trilhaSonoraId?: number[];
+}
+
 export const historiaService = {
   async listar(): Promise<Historia[]> {
     const { data } = await httpClient.get("/api/historia/listar");
@@ -39,6 +47,30 @@ export const historiaService = {
     }
 
     const { data } = await httpClient.post("/api/historia/criar", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return data;
+  },
+
+  async atualizar(historiaId: number, dados: AtualizarHistoriaDTO, arquivo?: { uri: string; name: string; type: string }): Promise<Historia> {
+    const formData = new FormData();
+
+    // Adiciona os dados da história como JSON string
+    formData.append('dados', JSON.stringify(dados));
+
+    // Adiciona o arquivo da capa, se fornecido
+    if (arquivo) {
+      formData.append('arquivo', {
+        uri: arquivo.uri,
+        name: arquivo.name,
+        type: arquivo.type,
+      } as any);
+    }
+
+    const { data } = await httpClient.put(`/api/historia/atualizar/${historiaId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
