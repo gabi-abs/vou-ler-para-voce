@@ -47,7 +47,8 @@ public class SecurityConfiguration {
 
             // Áudio (listar/baixar/play) — criação / deleção restritas abaixo
             "/api/audio/**",
-            "/audios/**"
+            "/audios/**",
+            "/api/usuario/user-info"
     };
 
     // Endpoints que só podem ser acessador por usuários com permissão de cliente

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -107,6 +108,16 @@ public class UsuarioService {
     @Transactional
     public void deletarPorUsuarioId(Integer usuarioId) {
         usuarioRepository.apagarUsuario(usuarioId);
+    }
+
+    /**
+     * Retorna as informações do usuário autenticado no contexto de segurança
+     */
+    public UsuarioDTOResponse obterInfoUsuarioAutenticado() {
+        String emailUsuario = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return modelMapper.map(usuario, UsuarioDTOResponse.class);
     }
 
 }
