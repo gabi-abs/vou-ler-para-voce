@@ -21,6 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   function logout() {
     SecureStore.deleteItemAsync("token");
     setUsuario(null);
+    setIsAuthenticated(false);
   }
 
   async function login(authForm: any) {
@@ -29,6 +30,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { token } = await usuarioService.login(authForm);
       SecureStore.setItem("token", token);
       setIsAuthenticated(true);
+      
+      // Buscar informações do usuário após o login
+      const usuarioInfo = await usuarioService.getUserInfo();
+      setUsuario(usuarioInfo);
     } finally {
       setLoading(false);
     }
