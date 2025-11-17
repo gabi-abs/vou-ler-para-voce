@@ -123,7 +123,7 @@ public class HistoriaService {
     }
 
     @Transactional
-    public HistoriaDTOResponse atualizarHistoria(Integer historiaId, HistoriaDTORequest historiaDTORequest, byte[] conteudo) {
+    public HistoriaDTOResponse atualizarHistoria(Integer historiaId, HistoriaDTORequest historiaDTORequest, byte[] conteudo, String nomeArquivo) throws IOException {
         Historia historia = historiaRepository.findById(historiaId)
                 .orElseThrow(() -> new EntityNotFoundException("História não encontrada com id: " + historiaId));
 
@@ -132,8 +132,11 @@ public class HistoriaService {
         historia.setTexto(historiaDTORequest.getTexto());
         historia.setStatus(historiaDTORequest.getStatus());
 
-        // Atualiza capa: mantém a antiga se não vier nada novo
-        historia.setCapa(conteudo);
+        // Atualiza capa: faz upload da nova imagem se fornecida, deletando a antiga
+        if (conteudo != null && nomeArquivo != null) {
+            String urlImagem = imagemUploadService.atualizarImagem(conteudo, nomeArquivo, historia.getCapa());
+            historia.setCapa(urlImagem.getBytes());
+        }
 
         // Atualiza usuário (se informado)
         if (historiaDTORequest.getUsuarioId() != null) {

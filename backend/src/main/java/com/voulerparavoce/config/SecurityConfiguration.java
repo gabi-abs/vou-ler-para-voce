@@ -25,7 +25,6 @@ public class SecurityConfiguration {
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/api/usuario/login", // Url que usaremos para fazer login
             "/api/usuario/criar", // Url que usaremos para criar um usuário
-            "/api/historia/criar", // Temporário: permitir criar história sem autenticação para testes
             "/imagens/**", // Permitir acesso público às imagens
             "/audios/**", // Permitir acesso público aos áudios
 
@@ -53,12 +52,11 @@ public class SecurityConfiguration {
 
     // Endpoints que só podem ser acessador por usuários com permissão de cliente
     public static final String [] ENDPOINTS_CUSTOMER = {
-            // História (ações do próprio usuário)
-            // "/api/historia/criar", // Movido para ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED
-            "/api/historia/atualizar/**",
-            "/api/historia/deletar/**",         // deleta próprias histórias
+             "/api/historia/criar", // Movido para ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED
             "/api/historia/vincularTrilha/**", // vincular/remover trilha de uma história (opcional)
             "/api/historia/listar",
+            "/api/historia/atualizar/**",
+            "/api/historia/deletar/**",
             "/api/historia/favoritas/**", // historias favoritas de um usuario
 
             // Áudio (ações do próprio usuário)
@@ -79,10 +77,6 @@ public class SecurityConfiguration {
 
     // Endpoints que só podem ser acessador por usuários com permissão de administrador
     public static final String [] ENDPOINTS_ADMIN = {
-            "/api/trilhasonora/criar",
-            "/api/trilhasonora/atualizar/**",
-            "/api/trilhasonora/deletar/**",
-
             // Usuário (admin full control)
             //"/api/usuario/listar",
             "/api/usuario/atualizarUsuario/**",
@@ -90,8 +84,6 @@ public class SecurityConfiguration {
             "/api/usuario/listarPorUsuarioid/**",
 
             // Moderação / gestão global (admin pode deletar/editar histórias e áudios de qualquer usuário se necessário)
-           // "/api/historia/deletar/**",
-            "/api/historia/atualizar/**",
             "/api/audio/deletar/**",
             "/api/audio/atualizar/**"
 

@@ -71,11 +71,11 @@ public class HistoriaController {
             @RequestParam("dados") String dadosJson,
             @RequestParam(value = "arquivo", required = false) MultipartFile arquivo
     ) throws IOException {
-
         byte[] conteudo = (arquivo != null) ? arquivo.getBytes() : null;
+        String nomeArquivo = (arquivo != null) ? arquivo.getOriginalFilename() : null;
 
         HistoriaDTORequest historiaDTORequest = objectMapper.readValue(dadosJson, HistoriaDTORequest.class);
-        HistoriaDTOResponse response = historiaService.atualizarHistoria(historiaId, historiaDTORequest, conteudo);
+        HistoriaDTOResponse response = historiaService.atualizarHistoria(historiaId, historiaDTORequest, conteudo, nomeArquivo);
         return ResponseEntity.ok(response);
     }
 
