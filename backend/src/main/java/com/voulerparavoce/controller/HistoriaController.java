@@ -1,16 +1,11 @@
 package com.voulerparavoce.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.voulerparavoce.dto.request.AudioDTORequest;
 import com.voulerparavoce.dto.request.HistoriaDTORequest;
-import com.voulerparavoce.dto.response.AudioDTOResponse;
 import com.voulerparavoce.dto.response.HistoriaDTOResponse;
-import com.voulerparavoce.dto.response.UsuarioDTOResponse;
 import com.voulerparavoce.service.HistoriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -34,14 +28,18 @@ public class HistoriaController {
         this.objectMapper = objectMapper;
     }
 
-    @PostMapping(value = "/criar")
+    @PostMapping(value = "/criar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Criar histórias", description = "Endpoint para criar historias com arquivo")
     public ResponseEntity<?> criarHistoria(
-           @RequestBody HistoriaDTORequest historiaDTORequest) throws IOException {
-        //Mudança da capa para salvar url em vez de a imagem no banco por questao de perfomance, necessario uso de firebase
-        byte[] conteudo = historiaDTORequest.getCapaurl().getBytes(StandardCharsets.UTF_8);
+            @RequestParam("dados") String dadosJson,
+            @RequestParam(value = "arquivo", required = false) MultipartFile arquivo
+    ) throws IOException {
 
-        HistoriaDTOResponse response = historiaService.criarHistoria(historiaDTORequest, conteudo);
+        byte[] conteudo = (arquivo != null) ? arquivo.getBytes() : null;
+        String nomeArquivo = (arquivo != null) ? arquivo.getOriginalFilename() : null;
+
+        HistoriaDTORequest historiaDTORequest = objectMapper.readValue(dadosJson, HistoriaDTORequest.class);
+        HistoriaDTOResponse response = historiaService.criarHistoria(historiaDTORequest, conteudo, nomeArquivo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

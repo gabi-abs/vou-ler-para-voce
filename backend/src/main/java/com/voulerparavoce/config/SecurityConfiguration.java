@@ -25,6 +25,9 @@ public class SecurityConfiguration {
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/api/usuario/login", // Url que usaremos para fazer login
             "/api/usuario/criar", // Url que usaremos para criar um usuário
+            "/api/historia/criar", // Temporário: permitir criar história sem autenticação para testes
+            "/imagens/**", // Permitir acesso público às imagens
+            "/audios/**", // Permitir acesso público aos áudios
 
             // 🔓 Swagger/OpenAPI UI
             "/v3/api-docs/**",
@@ -51,7 +54,7 @@ public class SecurityConfiguration {
     // Endpoints que só podem ser acessador por usuários com permissão de cliente
     public static final String [] ENDPOINTS_CUSTOMER = {
             // História (ações do próprio usuário)
-            "/api/historia/criar",
+            // "/api/historia/criar", // Movido para ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED
             "/api/historia/atualizar/**",
             "/api/historia/deletar/**",         // deleta próprias histórias
             "/api/historia/vincularTrilha/**", // vincular/remover trilha de uma história (opcional)
