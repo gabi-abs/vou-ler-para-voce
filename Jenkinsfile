@@ -44,7 +44,7 @@ pipeline {
             		sh "docker rm -v ${appName} || exit 0"  // Remover o container e os volumes associados
 
                     // Executar o novo container
-                       sh "docker-compose up -d --build"
+                     sh "docker run -d --name ${appName} -p 8418:8418 ${imageTag}"
                 }
             }
         }
