@@ -1,5 +1,11 @@
-import React, { useState, useRef } from "react";
-import { ScrollView, StyleSheet, Text, View, Animated } from "react-native";
+import React, { useRef, useState } from "react";
+import {
+  Animated,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import HistoriaItem from "@/components/HistoriaItem/HistoriaItem";
 import { useHistorias } from "@/hooks/use-historias";
@@ -11,13 +17,11 @@ import { theme } from "@/themes";
 export default function Minhas() {
   const { data: historiaLista, isLoading, error } = useHistorias();
   const { data: favoritas } = useHistoriasFavoritas();
-  const { mutate: toggleFavorito, isPending } = useToggleFavoritoHistoria();
-  // 🔔 Estado do toast
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toastVisible, setToastVisible] = useState(false);
-  const toastOpacity = useRef(new Animated.Value(0)).current;
 
-  // IDs das favoritas para marcar na lista de "Minhas"
+  // usando mutateAsync pra controlar certinho o fluxo → igual Favoritas
+  const { mutateAsync: toggleFavorito, isPending } = useToggleFavoritoHistoria();
+
+  // monta set com ids favoritas pra marcar as Minhas
   const favoritasIds = new Set(
     (favoritas ?? []).map((h: Historia) => String(h.id))
   );
@@ -27,6 +31,11 @@ export default function Minhas() {
       ...h,
       favoritado: favoritasIds.has(String(h.id)),
     })) ?? [];
+
+  // 🔔 Toast local
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastVisible, setToastVisible] = useState(false);
+  const toastOpacity = useRef(new Animated.Value(0)).current;
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -49,26 +58,29 @@ export default function Minhas() {
     });
   };
 
-  const handleToggleFavorito = (h: Historia) => {
+  const handleToggleFavorito = async (h: Historia) => {
     const estavaFavoritado = h.favoritado;
 
-    toggleFavorito(
-      { historia: h },
-      {
-        onSuccess: () => {
-          if (estavaFavoritado) {
-            showToast("História removida das favoritas.");
-          } else {
-            showToast("História adicionada às favoritas 💛");
-          }
-        },
+    try {
+      await toggleFavorito({ historia: h });
+
+      if (estavaFavoritado) {
+        showToast("História removida das favoritas.");
+      } else {
+        showToast("História adicionada às favoritas 💛");
       }
-    );
+    } catch (e: any) {
+      console.log("Erro ao favoritar/desfavoritar (Minhas):", e?.message ?? e);
+      showToast("Não foi possível atualizar favorito.");
+    }
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listaContent}
+      >
         {isLoading ? (
           <Text>Carregando...</Text>
         ) : error ? (
@@ -76,17 +88,19 @@ export default function Minhas() {
         ) : historiasMarcadas.length === 0 ? (
           <Text>Você ainda não tem histórias cadastradas.</Text>
         ) : (
-          historiasMarcadas.map((historia: Historia) => (
+          historiasMarcadas.map((historia) => (
             <HistoriaItem
               key={historia.id}
               historia={historia}
-              onToggleFavorito={(h) => toggleFavorito({ historia: h })}
+              onToggleFavorito={handleToggleFavorito}
             />
           ))
         )}
 
         {isPending && (
-          <Text style={{ marginTop: 10 }}>Atualizando favoritos...</Text>
+          <Text style={{ marginTop: 10, textAlign: "center" }}>
+            Atualizando favoritos…
+          </Text>
         )}
       </ScrollView>
 
@@ -94,10 +108,17 @@ export default function Minhas() {
         <Animated.View
           style={[
             styles.toastContainer,
-            { opacity: toastOpacity, transform: [{ translateY: toastOpacity.interpolate({
-              inputRange: [0, 1],
-              outputRange: [20, 0],
-            }) }] },
+            {
+              opacity: toastOpacity,
+              transform: [
+                {
+                  translateY: toastOpacity.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [20, 0],
+                  }),
+                },
+              ],
+            },
           ]}
         >
           <Text style={styles.toastText}>{toastMessage}</Text>
@@ -114,6 +135,9 @@ const styles = StyleSheet.create({
     minHeight: "100%",
     flex: 1,
   },
+  listaContent: {
+    paddingBottom: 16,
+  },
   toastContainer: {
     position: "absolute",
     bottom: 24,
@@ -121,7 +145,7 @@ const styles = StyleSheet.create({
     right: 16,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: "#4D4388", // roxinho do sistema
+    backgroundColor: "#4D4388",
     borderRadius: 16,
     shadowColor: "#000",
     shadowOpacity: 0.15,
