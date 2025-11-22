@@ -34,60 +34,50 @@ public class SecurityConfiguration {
             "/swagger-ui/index.html"
     };
 
-    // Endpoints que requerem autenticação para serem acessados
-    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
-            // Histórias (listar / visualizar)
-            "/api/historia/listar",
-            "/api/historia/listarPorHistoriaid/**",
-            "/api/historia/usuario/**",
+//    // Endpoints que requerem autenticação para serem acessados
+//    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
+//            // Histórias (listar / visualizar)
+//            "/api/historia/listar",
+//            "/api/historia/listarPorHistoriaid/**",
+//            "/api/historia/usuario/**",
+//
+//            // Trilhas (listar / visualizar)
+//            "/api/trilhasonora/listar",
+//            "/api/trilhasonora/{id}",
+//
+//            // Áudio (listar/baixar/play) — criação / deleção restritas abaixo
+//            "/api/audio/**",
+//            "/audios/**",
+//            "/api/usuario/user-info"
+//    };
 
-            // Trilhas (listar / visualizar)
-            "/api/trilhasonora/listar",
-            "/api/trilhasonora/{id}",
-
-            // Áudio (listar/baixar/play) — criação / deleção restritas abaixo
-            "/api/audio/**",
-            "/audios/**",
-            "/api/usuario/user-info"
-    };
-
-    // Endpoints que só podem ser acessador por usuários com permissão de cliente
-    public static final String [] ENDPOINTS_CUSTOMER = {
-             "/api/historia/criar", // Movido para ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED
-            "/api/historia/vincularTrilha/**", // vincular/remover trilha de uma história (opcional)
-            "/api/historia/listar",
-            "/api/historia/atualizar/**",
-            "/api/historia/deletar/**",
-            "/api/historia/favoritas/**", // historias favoritas de um usuario
-
-            // Áudio (ações do próprio usuário)
-            "/api/audio/criar",
-            "/api/audio/atualizar/**",
-            "/api/audio/deletar/**",
-
-            // Favoritos (somente do usuário)
-            "/api/favorito/adicionar",
-            "/api/favorito/remover",
-            "/api/favorito/usuario/**",
-            "/api/usuario/listar",
-
-            "/api/usuario/deletar/**",
-
-
-    };
+//    // Endpoints que só podem ser acessador por usuários com permissão de cliente
+//    public static final String [] ENDPOINTS_CUSTOMER = {
+//             "/api/historia/criar", // Movido para ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED
+//            "/api/historia/vincularTrilha/**", // vincular/remover trilha de uma história (opcional)
+//            "/api/historia/listar",
+//            "/api/historia/atualizar/**",
+//            "/api/historia/deletar/**",
+//            "/api/historia/favoritas/**", // historias favoritas de um usuario
+//
+//            // Áudio (ações do próprio usuário)
+//            "/api/audio/criar",
+//            "/api/audio/atualizar/**",
+//            "/api/audio/deletar/**",
+//
+//            // Favoritos (somente do usuário)
+//            "/api/favorito/adicionar",
+//            "/api/favorito/remover",
+//            "/api/favorito/usuario/**",
+//            "/api/usuario/listar",
+//
+//            "/api/usuario/deletar/**",
+//    };
 
     // Endpoints que só podem ser acessador por usuários com permissão de administrador
     public static final String [] ENDPOINTS_ADMIN = {
-            // Usuário (admin full control)
-            //"/api/usuario/listar",
             "/api/usuario/atualizarUsuario/**",
-            //"/api/usuario/deletar/**",
             "/api/usuario/listarPorUsuarioid/**",
-
-            // Moderação / gestão global (admin pode deletar/editar histórias e áudios de qualquer usuário se necessário)
-            "/api/audio/deletar/**",
-            "/api/audio/atualizar/**"
-
     };
 
     @Bean
@@ -98,9 +88,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                         .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRADOR")
-                        .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("USUARIO")
-                        .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
-                        .anyRequest().denyAll()
+//                        .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("USUARIO")
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore((Filter) userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

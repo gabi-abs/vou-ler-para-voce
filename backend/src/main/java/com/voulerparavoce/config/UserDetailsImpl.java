@@ -1,4 +1,4 @@
-package com.voulerparavoce.service;
+package com.voulerparavoce.config;
 
 import com.voulerparavoce.entity.Usuario;
 import org.springframework.security.core.GrantedAuthority;

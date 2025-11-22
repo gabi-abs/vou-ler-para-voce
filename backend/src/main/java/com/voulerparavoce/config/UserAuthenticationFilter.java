@@ -3,7 +3,6 @@ package com.voulerparavoce.config;
 import com.voulerparavoce.entity.Usuario;
 import com.voulerparavoce.repository.UsuarioRepository;
 import com.voulerparavoce.service.JwtTokenService;
-import com.voulerparavoce.service.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

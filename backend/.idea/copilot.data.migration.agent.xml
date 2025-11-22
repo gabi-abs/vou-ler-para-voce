@@ -1,29 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AgentMigrationStateService">
+    <option name="migrationStatus" value="IN_PROGRESS" />
     <option name="pendingSessionIds">
+      <option value="082ac898-313d-4363-b8dd-9dac19dd2ba5" />
+      <option value="13233daf-ad59-42df-9671-f1ddc8b791c0" />
       <option value="2effb306-8f44-413b-a22b-a629a0249adc" />
+      <option value="5c1c6d1c-d1e7-4de4-981c-2155e7163e61" />
+      <option value="96ef7d13-b297-4be6-b5a4-d1117b9c0320" />
     </option>
     <option name="pendingTurns">
       <map>
+        <entry key="082ac898-313d-4363-b8dd-9dac19dd2ba5">
+          <value>
+            <set>
+              <option value="83e51671-e37c-4450-a444-ef8b8c1c3ee2" />
+              <option value="8891f267-f346-47bd-905b-e1167885b554" />
+              <option value="68795e63-21ee-4843-8cf4-a8aa3e002801" />
+            </set>
+          </value>
+        </entry>
         <entry key="2effb306-8f44-413b-a22b-a629a0249adc">
           <value>
             <set>
-              <option value="d306fdbd-02f0-4f1b-bd13-fdb1faa055b5" />
-              <option value="a7a1bbb5-2bfb-44b4-b847-4f8ef9b06731" />
               <option value="243f5783-2090-422d-b852-404b89d32096" />
+              <option value="a7a1bbb5-2bfb-44b4-b847-4f8ef9b06731" />
+              <option value="d306fdbd-02f0-4f1b-bd13-fdb1faa055b5" />
+            </set>
+          </value>
+        </entry>
+        <entry key="5c1c6d1c-d1e7-4de4-981c-2155e7163e61">
+          <value>
+            <set>
+              <option value="191c3dee-ee2c-4b36-81c7-cc9d22822ae5" />
+              <option value="9d4085a6-3b69-4bbe-af30-a1917f251f9c" />
             </set>
           </value>
         </entry>
       </map>
     </option>
     <pendingWorkingSetItems>
-      <entry key="2effb306-8f44-413b-a22b-a629a0249adc">
+      <entry key="082ac898-313d-4363-b8dd-9dac19dd2ba5">
         <set>
-          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/service/UsuarioService.java" />
-          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/controller/UsuarioController.java" />
-          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/controller/HistoriaController.java" />
-          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/config/UserAuthenticationFilter.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/repository/AudioRepository.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/service/AudioService.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/service/HistoriaService.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/config/WebConfig.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/service/AudioUploadService.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/service/ImagemUploadService.java" />
+          <option value="file://$PROJECT_DIR$/src/main/resources/application.properties" />
+          <option value="file://$PROJECT_DIR$/SOLUCAO_AUDIO_TEMPO_REAL.md" />
+          <option value="file://$PROJECT_DIR$/.gitignore" />
+        </set>
+      </entry>
+      <entry key="2effb306-8f44-413b-a22b-a629a0249adc" />
+      <entry key="5c1c6d1c-d1e7-4de4-981c-2155e7163e61">
+        <set>
+          <option value="file://$PROJECT_DIR$/pom.xml" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/service/AudioConversionService.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/service/AudioUploadService.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/service/AudioService.java" />
+          <option value="file://$PROJECT_DIR$/src/main/java/com/voulerparavoce/controller/AudioController.java" />
+          <option value="file://$PROJECT_DIR$/AUDIO_UPLOAD_README.md" />
+          <option value="file://$PROJECT_DIR$/src/test/java/com/voulerparavoce/AudioUploadIntegrationTest.java" />
+          <option value="file://$PROJECT_DIR$/EXEMPLOS_USO_API_AUDIO.md" />
+          <option value="file://$PROJECT_DIR$/src/main/resources/application.properties" />
+          <option value="file://$PROJECT_DIR$/DOCUMENTACAO_COMPLETA_AUDIO.md" />
         </set>
       </entry>
     </pendingWorkingSetItems>

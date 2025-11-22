@@ -2,6 +2,7 @@ package com.voulerparavoce.service;
 
 import com.voulerparavoce.dto.request.HistoriaDTORequest;
 import com.voulerparavoce.dto.response.HistoriaDTOResponse;
+import com.voulerparavoce.dto.response.UsuarioDTOResponse;
 import com.voulerparavoce.entity.Historia;
 import com.voulerparavoce.entity.TrilhaSonora;
 import com.voulerparavoce.entity.Usuario;
@@ -13,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,6 +31,10 @@ public class HistoriaService {
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private AudioService audioService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     public HistoriaService(TrilhaSonoraRepository trilhaSonoraRepository,
                           UsuarioRepository usuarioRepository,
@@ -81,7 +87,7 @@ public class HistoriaService {
 
         List<Historia> historias = historiaRepository.listarHistoriasAtivosPorUsuario(usuario.getId());
 
-        return mapParaDTO(historias);
+        return mapParaDTO(historias, usuario.getId());
     }
 
     public List<HistoriaDTOResponse> listarHistoriasFavoritasDoUsuario() {
@@ -91,11 +97,11 @@ public class HistoriaService {
 
         List<Historia> historias = historiaRepository.listarHistoriasFavoritadasPorUsuario(usuario.getId());
 
-        return mapParaDTO(historias);
+        return mapParaDTO(historias, usuario.getId());
     }
 
     // Método auxiliar para evitar repetir código
-    private List<HistoriaDTOResponse> mapParaDTO(List<Historia> historias) {
+    private List<HistoriaDTOResponse> mapParaDTO(List<Historia> historias, Integer usuarioId) {
         return historias.stream()
                 .map(historia -> {
                     HistoriaDTOResponse dto = modelMapper.map(historia, HistoriaDTOResponse.class);
@@ -104,13 +110,18 @@ public class HistoriaService {
                                     .map(TrilhaSonora::getId)
                                     .toList()
                     );
+                    // Adiciona os áudios da história para o usuário
+                    dto.setAudios(audioService.listarAudiosPorHistoriaEUsuario(historia.getId(), usuarioId));
                     return dto;
                 })
                 .toList();
     }
 
     public HistoriaDTOResponse listarPorHistoriaId(Integer historiaId) {
+        UsuarioDTOResponse usuario = usuarioService.obterInfoUsuarioAutenticado();
+
         Historia historia = historiaRepository.ObterHistoriaPeloId(historiaId);
+
         HistoriaDTOResponse dto = modelMapper.map(historia, HistoriaDTOResponse.class);
 
         dto.setTrilhaSonoraId(
@@ -118,6 +129,9 @@ public class HistoriaService {
                         .map(TrilhaSonora::getId)
                         .toList()
         );
+
+        // Adiciona os áudios da história para o usuário autenticado
+        dto.setAudios(audioService.listarAudiosPorHistoriaEUsuario(historia.getId(), usuario.getId()));
 
         return dto;
     }
@@ -185,6 +199,8 @@ public class HistoriaService {
                                     .map(TrilhaSonora::getId)
                                     .toList()
                     );
+                    // Adiciona os áudios da história para o usuário
+                    dto.setAudios(audioService.listarAudiosPorHistoriaEUsuario(historia.getId(), usuarioId));
                     return dto;
                 })
                 .toList();

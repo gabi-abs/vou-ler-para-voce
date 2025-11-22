@@ -1,5 +1,6 @@
 package com.voulerparavoce.service;
 
+import com.voulerparavoce.config.UserDetailsImpl;
 import com.voulerparavoce.entity.Usuario;
 import com.voulerparavoce.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

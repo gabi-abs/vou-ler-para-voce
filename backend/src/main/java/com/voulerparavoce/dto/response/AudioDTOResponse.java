@@ -1,6 +1,7 @@
 package com.voulerparavoce.dto.response;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 public class AudioDTOResponse {
@@ -47,8 +48,11 @@ public class AudioDTOResponse {
         this.ordem = ordem;
     }
 
-    public byte[] getAudio() {
-        return audio;
+    public String getAudio() {
+        if(audio == null) {
+            return null;
+        }
+        return new String(audio, StandardCharsets.UTF_8);
     }
 
     public void setAudio(byte[] audio) {

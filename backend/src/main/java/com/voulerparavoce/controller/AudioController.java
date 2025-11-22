@@ -6,22 +6,18 @@ import com.voulerparavoce.dto.response.AudioDTOResponse;
 import com.voulerparavoce.service.AudioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 @RestController
 @RequestMapping("/api/audio")
 @Tag(name="Audio", description = "Api de gerenciamento de audios")
 public class AudioController {
 
-    private AudioService audioService;
+    private final AudioService audioService;
     private final ObjectMapper objectMapper;
 
     public AudioController(AudioService audioService, ObjectMapper objectMapper) {
@@ -34,13 +30,14 @@ public class AudioController {
     @Operation(summary = "Criar áudios", description = "Endpoint para criar áudios com arquivo")
     public ResponseEntity<?> criarAudio(
             @RequestParam("dados") String dadosJson,
-            @RequestPart("arquivo") MultipartFile arquivo) throws IOException {
+            @RequestPart("arquivo") MultipartFile arquivo) throws Exception {
 
         AudioDTORequest audioDTORequest = objectMapper.readValue(dadosJson, AudioDTORequest.class);
 
         byte[] conteudo = arquivo.getBytes();
+        String nomeArquivo = arquivo.getOriginalFilename();
 
-        AudioDTOResponse response = audioService.criarAudio(audioDTORequest, conteudo);
+        AudioDTOResponse response = audioService.criarAudio(audioDTORequest, conteudo, nomeArquivo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

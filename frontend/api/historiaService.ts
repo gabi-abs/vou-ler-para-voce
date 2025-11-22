@@ -82,6 +82,25 @@ export const historiaService = {
   async favoritas(): Promise<Historia[]> {
     const { data } = await httpClient.get("/api/historia/favoritas");
     return data;
+  },
+
+  async listarPorHistoriaId(historiaId: number): Promise<Historia> {
+    const { data } = await httpClient.get(`/api/historia/listarPorHistoriaId/${historiaId}`);
+
+    // Mapear URLs dos áudios para incluir o endereço base
+    const historiaComAudios = {
+      ...data,
+      capa: data.capa?.includes("http") ? data.capa : `${process.env.EXPO_PUBLIC_API_URL}${data.capa}`,
+      audios: data.audios?.map((audio: any) => ({
+        ...audio,
+        audioUrl: audio.audio?.includes("http")
+          ? audio.audio
+          : `${process.env.EXPO_PUBLIC_API_URL}${audio.audio}`
+      })) || []
+    };
+
+    console.log("listar história por ID:", historiaComAudios);
+    return historiaComAudios;
   }
 
 };

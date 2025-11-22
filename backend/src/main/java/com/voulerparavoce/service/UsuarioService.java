@@ -1,6 +1,7 @@
 package com.voulerparavoce.service;
 
 import com.voulerparavoce.config.SecurityConfiguration;
+import com.voulerparavoce.config.UserDetailsImpl;
 import com.voulerparavoce.dto.LoginUserDto;
 import com.voulerparavoce.dto.RecoveryJwtTokenDto;
 import com.voulerparavoce.dto.request.UsuarioDTORequest;

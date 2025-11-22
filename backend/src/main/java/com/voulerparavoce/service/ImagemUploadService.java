@@ -11,7 +11,8 @@ import java.util.UUID;
 @Service
 public class ImagemUploadService {
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/imagens/";
+    // Diretório fora do classpath para upload de arquivos
+    private static final String UPLOAD_DIR = "uploads/imagens/";
 
     public String uploadImagem(byte[] conteudo, String nomeOriginal) throws IOException {
         // Cria o diretório se não existir

@@ -1,51 +1,117 @@
+import { audioService } from "@/api/audioService";
+import { historiaService } from "@/api/historiaService";
 import AudioRecorder from "@/components/audio/AudioRecord";
-import HistoriasMock from "@/mocks/historias";
+import { useAuth } from "@/context/AuthContext";
+import Historia from "@/interfaces/HistoriaInterface";
 import { theme } from "@/themes";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-
-interface Historia {
-  id: string;
-  titulo: string;
-  descricao?: string;
-  capaUrl?: string;
-  audioUrl?: string; // URL ou caminho do áudio da história
-}
+import { ActivityIndicator, Alert, Image, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function GravarHistoriaScreen() {
   const { historiaId } = useLocalSearchParams() as { historiaId: string }; // pega o :id da URL
   const [historia, setHistoria] = useState<Historia | null>(null);
   const [ultimoAudioUri, setUltimoAudioUri] = useState<string | null>(null);
+  const { usuario } = useAuth();
+  const [enviando, setEnviando] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  function buscarHistoriaPorId(id: string): Historia | null {
-    // Mock de busca - em um app real, você buscaria de uma API ou banco de dados
-    const historiasMock: Historia[] = HistoriasMock;
-
-    return historiasMock.find((historia) => historia.id === id) || null;
+  async function buscarHistoria() {
+    try {
+      setLoading(true);
+      const historiaData = await historiaService.listarPorHistoriaId(Number(historiaId));
+      setHistoria(historiaData);
+    } catch (error: any) {
+      console.error("Erro ao buscar história:", error);
+      Alert.alert(
+        "Erro",
+        error?.response?.data?.message || "Não foi possível carregar a história."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
-  function salvarAudioUri(uri: string) {
+  async function salvarAudioUri(uri: string) {
     setUltimoAudioUri(uri);
     setHistoria((prev) => (prev ? { ...prev, audioUrl: uri } : prev));
+
+    if (!usuario?.id) {
+      Alert.alert("Erro", "Usuário não autenticado.");
+      return;
+    }
+
+    setEnviando(true);
+
+    try {
+      const fileName = uri.split('/').pop() || 'audio.m4a';
+      const extension = fileName.split('.').pop()?.toLowerCase() || 'm4a';
+      
+      // Mapear extensão para tipo MIME correto
+      const mimeTypes: { [key: string]: string } = {
+        'm4a': 'audio/mp4',
+        'mp4': 'audio/mp4',
+        'caf': 'audio/x-caf',
+        'webm': 'audio/webm',
+        'wav': 'audio/wav',
+      };
+      
+      const fileType = mimeTypes[extension] || 'audio/mp4';
+      
+      const arquivo = {
+        uri: Platform.OS === 'ios' ? uri.replace('file://', '') : uri,
+        name: fileName,
+        type: fileType
+      };
+
+      console.log('Enviando áudio:', arquivo);
+
+      const dados = {
+        ordem: 1,
+        usuarioId: usuario.id,
+        historiaId: Number(historiaId)
+      };
+
+      const resultado = await audioService.criar(dados, arquivo);
+      
+      console.log('Áudio enviado com sucesso:', resultado);
+      
+      Alert.alert("Sucesso!", "Áudio enviado com sucesso!");
+    } catch (error: any) {
+      console.error("Erro ao enviar áudio:", error);
+      Alert.alert(
+        "Erro",
+        error?.response?.data?.message || "Não foi possível enviar o áudio. Tente novamente."
+      );
+    } finally {
+      setEnviando(false);
+    }
   }
 
   useEffect(() => {
     if (historiaId) {
-      const historiaEncontrada = buscarHistoriaPorId(historiaId);
-      setHistoria(historiaEncontrada);
+      buscarHistoria();
     }
   }, [historiaId]);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.centerContent]}>
+        <ActivityIndicator size="large" color={theme.colors.button.secondary.color} />
+        <Text style={styles.loadingText}>Carregando história...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
-        {/* <Text style={styles.titulo}>{historia?.titulo}</Text> */}
+        <Text style={styles.titulo}>{historia?.titulo}</Text>
         <View style={styles.capa}>
-          {historia && historia.capaUrl ? (
+          {historia && historia.capa ? (
             <>
               <Image
-                source={{ uri: historia.capaUrl }}
+                source={{ uri: historia.capa }}
                 style={styles.capaImagem}
               />
             </>
@@ -57,7 +123,7 @@ export default function GravarHistoriaScreen() {
 
       <ScrollView style={styles.scrollView}>
         <Text style={styles.descricao}>
-          {historia?.descricao || "Descrição não disponível."}
+          {historia?.texto || "Descrição não disponível."}
         </Text>
       </ScrollView>
 
@@ -79,6 +145,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 16,
     backgroundColor: theme.colors.background,
+  },
+  centerContent: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: theme.colors.text,
   },
   topContainer: {
     alignItems: "center",
