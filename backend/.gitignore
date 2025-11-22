@@ -36,15 +36,3 @@ Thumbs.db
 # Logs
 *.log
 logs/
-
-# Diretório de uploads (arquivos de usuários)
-uploads/
-
-# Arquivos estáticos de usuários (migrados para uploads/)
-src/main/resources/static/audios/*.mp3
-src/main/resources/static/imagens/*.jpg
-src/main/resources/static/imagens/*.jpeg
-src/main/resources/static/imagens/*.png
-!src/main/resources/static/audios/.gitkeep
-!src/main/resources/static/imagens/.gitkeep
-
