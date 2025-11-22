@@ -7,8 +7,6 @@ public class AudioDTORequest {
 
     private int ordem;
 
-    private int status;
-
     private Integer usuarioId;
 
     private Integer historiaId;
@@ -16,12 +14,9 @@ public class AudioDTORequest {
     public AudioDTORequest() {
     }
 
-    public AudioDTORequest(Integer historiaId, int ordem, int status, Integer usuarioId) {
+    public AudioDTORequest(Integer historiaId, int ordem) {
         this.historiaId = historiaId;
-
         this.ordem = ordem;
-        this.status = status;
-        this.usuarioId = usuarioId;
     }
 
     public int getOrdem() {
@@ -48,11 +43,4 @@ public class AudioDTORequest {
         this.usuarioId = usuarioId;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 }
