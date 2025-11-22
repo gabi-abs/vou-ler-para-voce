@@ -1,3 +1,50 @@
-target
-
+# Maven
+target/
 target/**
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# IDE - Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IDE - VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Diretório de uploads (arquivos de usuários)
+uploads/
+
+# Arquivos estáticos de usuários (migrados para uploads/)
+src/main/resources/static/audios/*.mp3
+src/main/resources/static/imagens/*.jpg
+src/main/resources/static/imagens/*.jpeg
+src/main/resources/static/imagens/*.png
+!src/main/resources/static/audios/.gitkeep
+!src/main/resources/static/imagens/.gitkeep
+

@@ -6,13 +6,14 @@ import {
   useAudioRecorder as useExpoAudioRecorder,
   type RecordingStatus
 } from "expo-audio";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // Removidos alerts para comportamento silencioso
 
 interface UseAudioRecorderOptions {
   onFinish?: (uri: string) => void;
   onError?: (error: unknown) => void;
   onStatus?: (status: RecordingStatus) => void; // listener opcional de status
+  maxDurationMs?: number; // duração máxima em milissegundos
 }
 
 // Use presets oficiais para garantir compatibilidade especialmente no iOS
@@ -25,7 +26,9 @@ const recordingOptions: RecordingOptions = {
   },
 };
 
-export function useAudioRecorder({ onFinish, onError, onStatus }: UseAudioRecorderOptions = {}) {
+const DEFAULT_MAX_DURATION_MS = 120000; // 2 minutos em milissegundos
+
+export function useAudioRecorder({ onFinish, onError, onStatus, maxDurationMs = DEFAULT_MAX_DURATION_MS }: UseAudioRecorderOptions = {}) {
   const recorder = useExpoAudioRecorder(
     recordingOptions,
     (status) => {
@@ -35,6 +38,7 @@ export function useAudioRecorder({ onFinish, onError, onStatus }: UseAudioRecord
   );
   const [audioUri, setAudioUri] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
+  const maxDurationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   async function startRecording() {
     try {
@@ -59,6 +63,13 @@ export function useAudioRecorder({ onFinish, onError, onStatus }: UseAudioRecord
       await recorder.record();
       setIsRecording(true);
       setAudioUri(null);
+
+      // Configura timer para parar automaticamente após o tempo máximo
+      maxDurationTimerRef.current = setTimeout(async () => {
+        console.log('Tempo máximo de gravação atingido');
+        await stopRecording();
+      }, maxDurationMs);
+
       return true;
     } catch (error) {
       if (onError) onError(error);
@@ -68,6 +79,12 @@ export function useAudioRecorder({ onFinish, onError, onStatus }: UseAudioRecord
 
   async function stopRecording() {
     try {
+      // Limpa o timer se existir
+      if (maxDurationTimerRef.current) {
+        clearTimeout(maxDurationTimerRef.current);
+        maxDurationTimerRef.current = null;
+      }
+
       await recorder.stop();
       setIsRecording(false);
 
@@ -106,6 +123,15 @@ export function useAudioRecorder({ onFinish, onError, onStatus }: UseAudioRecord
     setAudioUri(null);
   }
 
+  // Cleanup do timer quando o componente desmontar
+  useEffect(() => {
+    return () => {
+      if (maxDurationTimerRef.current) {
+        clearTimeout(maxDurationTimerRef.current);
+      }
+    };
+  }, []);
+
   return {
     audioUri,
     isRecording: isRecording || recorder.isRecording,
@@ -114,5 +140,6 @@ export function useAudioRecorder({ onFinish, onError, onStatus }: UseAudioRecord
     toggleRecording,
     clearAudioUri,
     recorder,
+    maxDurationMs, // expõe a duração máxima configurada
   };
 }

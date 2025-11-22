@@ -58,6 +58,14 @@ export function useAudioPlayer(source?: AudioSource | null): UseAudioPlayerRetur
 
       setPosicaoMs(currentTimeMs);
       setDuracaoMs(durationMs);
+
+      // Verifica se o áudio chegou ao final (com margem de 100ms para evitar problemas de precisão)
+      if (durationMs && currentTimeMs >= durationMs - 100 && player.playing) {
+        player.pause();
+        player.seekTo(0);
+        setIsPlaying(false);
+        setPosicaoMs(0);
+      }
     } catch (error) {
       // Silenciosamente ignora erros de player liberado
     }
@@ -77,7 +85,7 @@ export function useAudioPlayer(source?: AudioSource | null): UseAudioPlayerRetur
     if (player.playing) {
       intervalRef.current = setInterval(() => {
         updateProgress();
-      }, 250);
+      }, 100); // Atualiza a cada 100ms para maior fluidez
     }
 
     return () => clearUpdateInterval();

@@ -1,7 +1,8 @@
 export interface HistoriaAudio {
   id: number;
   ordem: number;
-  audio: string[];
+  audio: string;
+  audioUrl?: string;
   dataCriacao: string;
   status: number;
   usuarioId: number;
