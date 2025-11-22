@@ -21,7 +21,9 @@ export default function Favoritas() {
 
   const { data: favoritas, isLoading, error, isFetching } =
     useHistoriasFavoritas();
-  const { mutate: toggleFavorito, isPending } = useToggleFavoritoHistoria();
+
+  // 👇 usa mutateAsync pra controlar o fluxo e saber hora exata de exibir toast
+  const { mutateAsync: toggleFavorito, isPending } = useToggleFavoritoHistoria();
 
   const hasFavoritas = !!favoritas && favoritas.length > 0;
   const erro = error ? "Não foi possível carregar suas favoritas." : null;
@@ -56,21 +58,22 @@ export default function Favoritas() {
     router.push("/(historias)/minhas" as any);
   };
 
-  const handleToggleFavorito = (h: Historia) => {
+  // 🔁 AGORA COM TOAST GARANTIDO
+  const handleToggleFavorito = async (h: Historia) => {
     const estavaFavoritado = h.favoritado;
 
-    toggleFavorito(
-      { historia: h },
-      {
-        onSuccess: () => {
-          if (estavaFavoritado) {
-            showToast("História removida das favoritas.");
-          } else {
-            showToast("História adicionada às favoritas 💛");
-          }
-        },
+    try {
+      await toggleFavorito({ historia: h });
+
+      if (estavaFavoritado) {
+        showToast("História removida das favoritas.");
+      } else {
+        showToast("História adicionada às favoritas 💛");
       }
-    );
+    } catch (e: any) {
+      console.log("Erro ao favoritar/desfavoritar:", e?.message ?? e);
+      showToast("Não foi possível atualizar favorito.");
+    }
   };
 
   if (isLoading && !hasFavoritas) {
@@ -115,7 +118,7 @@ export default function Favoritas() {
           <HistoriaItem
             key={historia.id}
             historia={historia}
-            onToggleFavorito={(h) => toggleFavorito({ historia: h })}
+            onToggleFavorito={handleToggleFavorito}
           />
         ))}
 
