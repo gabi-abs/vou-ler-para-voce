@@ -26,7 +26,6 @@ export const historiaService = {
       capa: item.capa.includes("http") ? item.capa : `${process.env.EXPO_PUBLIC_API_URL}${item.capa}`, // mapear capaUrl para capa
     }));
 
-    console.log("listar historias data:", newData);
     return newData;
   },
 
@@ -99,8 +98,11 @@ export const historiaService = {
       })) || []
     };
 
-    console.log("listar história por ID:", historiaComAudios);
     return historiaComAudios;
+  },
+
+  async deletar(historiaId: number): Promise<void> {
+    await httpClient.delete(`/api/historia/deletar/${historiaId}`);
   }
 
 };

@@ -1,17 +1,19 @@
-import React, { useState, useRef } from "react";
-import { ScrollView, StyleSheet, Text, View, Animated } from "react-native";
+import React, { useRef, useState } from "react";
+import { Alert, Animated, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { historiaService } from "@/api/historiaService";
 import HistoriaItem from "@/components/HistoriaItem/HistoriaItem";
-import { useHistorias } from "@/hooks/use-historias";
 import { useHistoriasFavoritas } from "@/hooks/use-historia-favorita";
+import { useHistorias } from "@/hooks/use-historias";
 import { useToggleFavoritoHistoria } from "@/hooks/use-toggle-favorito-historia";
 import type Historia from "@/interfaces/HistoriaInterface";
 import { theme } from "@/themes";
 
 export default function Minhas() {
-  const { data: historiaLista, isLoading, error } = useHistorias();
+  const { data: historiaLista, isLoading, error, refetch } = useHistorias();
   const { data: favoritas } = useHistoriasFavoritas();
   const { mutate: toggleFavorito, isPending } = useToggleFavoritoHistoria();
+  const [isDeleting, setIsDeleting] = useState(false);
   // 🔔 Estado do toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastVisible, setToastVisible] = useState(false);
@@ -66,6 +68,40 @@ export default function Minhas() {
     );
   };
 
+  const handleDelete = async (h: Historia) => {
+    Alert.alert(
+      "Excluir História",
+      `Tem certeza que deseja excluir "${h.titulo}"?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setIsDeleting(true);
+              await historiaService.deletar(h.id);
+              showToast("História excluída com sucesso!");
+              // Recarrega a lista de histórias
+              refetch();
+            } catch (error: any) {
+              console.error("Erro ao excluir história:", error);
+              Alert.alert(
+                "Erro",
+                error?.response?.data?.message || "Não foi possível excluir a história."
+              );
+            } finally {
+              setIsDeleting(false);
+            }
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -81,12 +117,15 @@ export default function Minhas() {
               key={historia.id}
               historia={historia}
               onToggleFavorito={(h) => toggleFavorito({ historia: h })}
+              onDelete={handleDelete}
             />
           ))
         )}
 
-        {isPending && (
-          <Text style={{ marginTop: 10 }}>Atualizando favoritos...</Text>
+        {(isPending || isDeleting) && (
+          <Text style={{ marginTop: 10 }}>
+            {isDeleting ? "Excluindo história..." : "Atualizando favoritos..."}
+          </Text>
         )}
       </ScrollView>
 
