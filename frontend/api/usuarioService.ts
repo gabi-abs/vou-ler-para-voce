@@ -13,3 +13,5 @@ export const usuarioService = {
     return data;
   }
 };
+
+export { Usuario };

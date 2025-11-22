@@ -1,50 +1,89 @@
 import Historia from "@/interfaces/HistoriaInterface";
 import { theme } from "@/themes";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import ActionButton from "./ActionButton";
 
-export default function HistoriaItem({ historia }: { historia: Historia }) {
-  const [ item, setItem ] =  useState<Historia>(historia);
+type Props = {
+  historia: Historia;
+  onToggleFavorito?: (h: Historia) => void;
+};
+
+export default function HistoriaItem({ historia, onToggleFavorito }: Props) {
+  const [item, setItem] = useState<Historia>(historia);
+
+  useEffect(() => {
+    setItem(historia);
+  }, [historia]);
 
   const handleFavoriteToggle = () => {
-    item.favoritado = !item.favoritado;
-    setItem({ ...item });
+    if (onToggleFavorito) {
+      onToggleFavorito(item); // 👈 manda o estado ANTES
+    }
+
+    setItem(prev => ({
+      ...prev,
+      favoritado: !prev.favoritado, // 👈 só visual
+    }));
   };
 
   return (
-    <>
-      <View key={item.id} style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Image source={{ uri: item.capa }} style={styles.capaImagem} />
-          <View style={styles.cardInfo}>
-            <Text style={styles.cardTitle}>{item.titulo}</Text>
-            <Text style={styles.cardDescription} numberOfLines={9} ellipsizeMode="tail">
-              {item.texto}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.actionsContainer}>
-          <ActionButton type="tertiary" title="Gravar" icon="record-voice-over" onPress={() => {router.push(`/gravar/${item.id}` as any)}} historia={item} />
-          <ActionButton type="primary" title="Ouvir" icon="play-arrow" onPress={() => {router.push(`/ouvir/${item.id}` as any)}} historia={item} />
-          <ActionButton type="secondary" title="Editar" icon="edit" onPress={() => {router.push({ pathname: `/editar/${item.id}`, params: { historia: JSON.stringify(item) } } as any)}} historia={item} />
-          <ActionButton type="danger" icon={item.favoritado ? "favorite" : "favorite-border"} onPress={handleFavoriteToggle} historia={item} />
+    <View key={item.id} style={styles.card}>
+      <View style={styles.cardHeader}>
+        <Image source={{ uri: item.capa }} style={styles.capaImagem} />
+        <View style={styles.cardInfo}>
+          <Text style={styles.cardTitle}>{item.titulo}</Text>
+          <Text style={styles.cardDescription} numberOfLines={9} ellipsizeMode="tail">
+            {item.texto}
+          </Text>
         </View>
       </View>
-    </>
+      <View style={styles.actionsContainer}>
+        <ActionButton
+          type="tertiary"
+          title="Gravar"
+          icon="record-voice-over"
+          onPress={() => {
+            router.push(`/gravar/${item.id}` as any);
+          }}
+          historia={item}
+        />
+        <ActionButton
+          type="primary"
+          title="Ouvir"
+          icon="play-arrow"
+          onPress={() => {
+            router.push(`/ouvir/${item.id}` as any);
+          }}
+          historia={item}
+        />
+        <ActionButton
+          type="secondary"
+          title="Editar"
+          icon="edit"
+          onPress={() => {
+            router.push({
+              pathname: `/editar/${item.id}`,
+              params: { historia: JSON.stringify(item) },
+            } as any);
+          }}
+          historia={item}
+        />
+        <ActionButton
+          type="danger"
+          icon={item.favoritado ? "favorite" : "favorite-border"}
+          onPress={handleFavoriteToggle}
+          historia={item}
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: "row",
-  },
-  actionButton: {
-    marginRight: 10,
-    padding: 10,
-    backgroundColor: "#DDDDDD",
-    borderRadius: 5,
   },
   capaImagem: {
     width: 150,

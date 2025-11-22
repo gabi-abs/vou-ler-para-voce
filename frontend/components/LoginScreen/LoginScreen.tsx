@@ -122,13 +122,13 @@ const styles = StyleSheet.create({
   buttonText2:{
     color: "#1D0E85",
     fontWeight: "bold",
-    fontSize: 21,
+    fontSize: 20,
     marginTop: 8,
   },
   buttonText3:{
     color: "#1D0E85",
-    fontWeight: "bold",
     fontSize: 15,
     marginTop: 8,
+    fontWeight: "medium"
   }
 });

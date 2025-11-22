@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuario")
+@CrossOrigin("*")
 @Tag(name="Usuario", description = "Api de gerenciamento de usuarios")
 
 public class UsuarioController {
