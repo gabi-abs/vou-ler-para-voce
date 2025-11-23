@@ -7,10 +7,12 @@ import NuvemBackground from "@/components/NuvemBackgroud/NuvemBackgroud";
 import { useAuth } from "@/context/AuthContext";
 import { theme } from "@/themes";
 import { Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Main() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout, usuario } = useAuth();
+  const [menuAberto, setMenuAberto] = useState(false);
 
   return (
     <>
@@ -23,6 +25,33 @@ export default function Main() {
           <LoginScreen />
         ) : (
           <>
+            {/* MENU DE USUÁRIO */}
+            <View style={styles.userMenuContainer}>
+              <Pressable 
+                style={styles.userButton} 
+                onPress={() => setMenuAberto(!menuAberto)}
+              >
+                <Text style={styles.userButtonText}>
+                  Bem-vindo, {usuario?.nome || "Usuário"}
+                </Text>
+                <Text style={styles.arrowText}>{menuAberto ? "▲" : "▼"}</Text>
+              </Pressable>
+              
+              {menuAberto && (
+                <View style={styles.dropdownMenu}>
+                  <Pressable 
+                    style={styles.dropdownItem} 
+                    onPress={() => {
+                      setMenuAberto(false);
+                      logout?.();
+                    }}
+                  >
+                    <Text style={styles.dropdownText}>Sair</Text>
+                  </Pressable>
+                </View>
+              )}
+            </View>
+
             {/* CONTEÚDO PRINCIPAL */}
             <Text style={styles.title1}>Bem-vindo ao</Text>
             <Text style={styles.title2}>Vou Ler Para Você!</Text>
@@ -129,5 +158,65 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     paddingHorizontal: 10,
+  },
+
+  /** MENU DE USUÁRIO */
+  userMenuContainer: {
+    position: "absolute",
+    top: 50,
+    right: 20,
+    zIndex: 3,
+  },
+  userButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    gap: 10,
+    borderWidth: 1.5,
+    borderColor: "rgba(216, 116, 67, 0.3)",
+    shadowColor: "#D87443",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  userButtonText: {
+    color: "#D87443",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  arrowText: {
+    color: "#D87443",
+    fontSize: 10,
+    fontWeight: "bold",
+  },
+  dropdownMenu: {
+    marginTop: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "rgba(216, 116, 67, 0.2)",
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  dropdownItem: {
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(216, 116, 67, 0.1)",
+  },
+  dropdownText: {
+    color: "#D87443",
+    fontSize: 15,
+    fontWeight: "600",
+    textAlign: "center",
   },
 });

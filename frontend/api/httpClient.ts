@@ -7,11 +7,11 @@ export const httpClient = axios.create({
 
 httpClient.interceptors.request.use(async config => {
   // Não adiciona o token para requisições de /api/usuarios
-  if (config.url?.includes("/api/usuario/login")) {
+  if (["/api/usuario/login", "/api/usuario/criar"].includes(config.url as string)) {
     return config;
   }
 
-  const token = SecureStore.getItem("token");
+  const token = await SecureStore.getItemAsync("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

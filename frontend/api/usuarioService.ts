@@ -8,6 +8,12 @@ export const usuarioService = {
     return data;
   },
 
+  async criar(registerForm: { email: string; nome: string; senha: string }): Promise<any> {
+    const { data } = await httpClient.post("/api/usuario/criar", registerForm);
+    console.log("register data:", data);
+    return data;
+  },
+
   async getUserInfo(): Promise<Usuario> {
     const { data } = await httpClient.get("/api/usuario/user-info");
     return data;
@@ -15,3 +21,4 @@ export const usuarioService = {
 };
 
 export { Usuario };
+

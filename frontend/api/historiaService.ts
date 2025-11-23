@@ -17,13 +17,20 @@ interface AtualizarHistoriaDTO {
   trilhaSonoraId?: number[];
 }
 
+const tratarEnderecoCapa = (capa: string): string => {
+  if (capa.includes("http")) {
+    return capa;
+  }
+  return `${process.env.EXPO_PUBLIC_API_URL}${capa}`;
+};
+
 export const historiaService = {
   async listar(): Promise<Historia[]> {
     const { data } = await httpClient.get("/api/historia/listar");
 
     const newData = data.map((item: any) => ({
       ...item,
-      capa: item.capa.includes("http") ? item.capa : `${process.env.EXPO_PUBLIC_API_URL}${item.capa}`, // mapear capaUrl para capa
+      capa: tratarEnderecoCapa(item.capa), // mapear capaUrl para capa
     }));
 
     return newData;
@@ -80,7 +87,14 @@ export const historiaService = {
 
   async favoritas(): Promise<Historia[]> {
     const { data } = await httpClient.get("/api/historia/favoritas");
-    return data;
+
+    const newData = data.map((item: any) => ({
+      ...item,
+      capa: tratarEnderecoCapa(item.capa),
+    }));
+
+
+    return newData;
   },
 
   async listarPorHistoriaId(historiaId: number): Promise<Historia> {

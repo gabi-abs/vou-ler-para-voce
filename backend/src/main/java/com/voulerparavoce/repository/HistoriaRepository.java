@@ -16,10 +16,11 @@ public interface HistoriaRepository extends JpaRepository<Historia, Integer> {
     FROM Historia h
     JOIN h.favoritos f
     WHERE h.status = 1 AND f.usuario.id = :usuarioId
+    ORDER BY h.dataCriacao DESC
 """)
     List<Historia> listarHistoriasFavoritadasPorUsuario(@Param("usuarioId") Integer usuarioId);
 
-    @Query("SELECT h FROM Historia h WHERE h.status = 1 AND h.usuario.id = :usuarioId")
+    @Query("SELECT h FROM Historia h WHERE h.status = 1 AND h.usuario.id = :usuarioId ORDER BY h.dataCriacao DESC")
     List<Historia> listarHistoriasAtivosPorUsuario(@Param("usuarioId") Integer usuarioId);
 
     @Query(
