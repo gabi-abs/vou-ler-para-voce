@@ -1,12 +1,13 @@
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import CriarUsuario from "../CriarUsuario/CriarUsuario";
 
 export default function LoginScreen() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-
+  const [mostrarCadastro, setMostrarCadastro] = useState(false);
 
   const handleLogin = () => {
     const form = {
@@ -15,6 +16,19 @@ export default function LoginScreen() {
     };
     login(form);
   };
+
+  if (mostrarCadastro) {
+    return (
+      <CriarUsuario 
+        onVoltar={() => setMostrarCadastro(false)}
+        onCadastroSucesso={() => {
+          // Limpar os campos de login para o usuário poder fazer login
+          setEmail("");
+          setSenha("");
+        }}
+      />
+    );
+  }
 
   return (
     
@@ -59,7 +73,7 @@ export default function LoginScreen() {
       </View>
 
       <View>
-        <Pressable>
+        <Pressable onPress={() => setMostrarCadastro(true)}>
           <Text style={styles.buttonText2}>Cadastre-se</Text>
         </Pressable>
       </View>

@@ -7,6 +7,7 @@ import com.voulerparavoce.dto.RecoveryJwtTokenDto;
 import com.voulerparavoce.dto.request.UsuarioDTORequest;
 import com.voulerparavoce.dto.response.UsuarioDTOResponse;
 import com.voulerparavoce.entity.Role;
+import com.voulerparavoce.entity.RoleName;
 import com.voulerparavoce.entity.Usuario;
 import com.voulerparavoce.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -60,7 +61,12 @@ public class UsuarioService {
     public void criarUsuario(UsuarioDTORequest usuarioDTORequest) {
         // Criação do Role, se necessário
         Role role = new Role();
-        role.setName(usuarioDTORequest.getRole());
+
+        if (usuarioDTORequest.getRole() == null) {
+            role.setName(RoleName.ROLE_USUARIO); // Define um valor padrão se nenhum papel for fornecido
+        } else {
+            role.setName(usuarioDTORequest.getRole());
+        }
 
         // Criação do Usuario com todos os campos necessários
         Usuario usuario = new Usuario();
