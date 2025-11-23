@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   containerLista: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#FFF8E2",
+    backgroundColor: "#F9ECFD",
   },
   title: {
     fontSize: 40,

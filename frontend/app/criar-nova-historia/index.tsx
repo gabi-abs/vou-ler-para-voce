@@ -106,7 +106,7 @@ export default function CriarNovaHistoria() {
           <Text style={styles.label}>Título</Text>
           <TextInput
             style={styles.input}
-            placeholder="Digite o título.."
+            placeholder="Digite o título da sua história.."
             placeholderTextColor="#AF9D8D"
             value={titulo}
             onChangeText={setTitulo}
@@ -173,17 +173,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   botaoSalvar: {
-    // margin: 24,
-    // backgroundColor: "#FFE187",
-    // borderRadius: 20,
-    // height: 50,
-    // borderWidth: 2,
-    // borderColor: "#E9C66C",
-    // paddingVertical: 12,
     borderRadius: 20,
     paddingVertical: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#FFEDB3',
+    backgroundColor: '#FFE187',
+    borderColor: "#E9C66C",
+    height: 60
   },
   textoBotaoSalvar: {
     // color: "#D16314",
