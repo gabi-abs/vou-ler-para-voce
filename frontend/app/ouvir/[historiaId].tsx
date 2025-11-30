@@ -1,5 +1,6 @@
 import { historiaService } from "@/api/historiaService";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
+import TelaBloqueada from "@/components/TelaBloqueada/TelaBloqueada";
 import { useAudioPlayer } from "@/hooks/use-audio-player";
 import Historia from "@/interfaces/HistoriaInterface";
 import { theme } from "@/themes";
@@ -12,12 +13,26 @@ export default function OuvirHistoriaScreen() {
   const { historiaId } = useLocalSearchParams() as { historiaId: string };
   const [historia, setHistoria] = useState<Historia | null>(null);
   const [loading, setLoading] = useState(true);
+  const [telaBloqueada, setTelaBloqueada] = useState(false);
   
   // Pega o primeiro áudio da lista de áudios da história
   const audioUrl = historia?.audios?.[0]?.audioUrl;
   
   // Hook do player de áudio - passa o audioUrl do primeiro áudio
   const { isPlaying, duracaoMs, posicaoMs, togglePlayPause, formatarMs } = useAudioPlayer(audioUrl);
+
+
+  function bloquearTela(){
+    setTelaBloqueada(bloqueado => {
+      if (bloqueado) {
+
+        return false;
+      }
+
+      return true;
+    });
+  }
+
 
   async function buscarHistoria() {
     try {
@@ -50,7 +65,9 @@ export default function OuvirHistoriaScreen() {
     );
   }
 
-  return (
+  return telaBloqueada ? (
+    <TelaBloqueada onDesbloquear={bloquearTela} />
+  ) : (
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <Text style={styles.titulo}>{historia?.titulo}</Text>
@@ -86,7 +103,7 @@ export default function OuvirHistoriaScreen() {
               size={64} 
             />
           </Pressable>
-          <Pressable onPress={() => {}}>
+          <Pressable onPress={bloquearTela}>
             <MaterialIcons name="lock"  color={theme.colors.button.tertiary.color} size={64} />
           </Pressable>
         </View>

@@ -18,7 +18,7 @@ export default function HistoriasTabsLayout() {
       navigation.setOptions({
         headerStyle: {
           backgroundColor: "#F9ECFD",
-        },
+        }
       });
       return;
     }
