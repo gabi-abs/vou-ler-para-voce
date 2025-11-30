@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useDialog } from "@/context/DialogContext";
 import Historia from "@/interfaces/HistoriaInterface";
 import { theme } from "@/themes";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Image, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -85,7 +85,11 @@ export default function GravarHistoriaScreen() {
       abrirDialog({
         title: "Sucesso!",
         message: "Áudio enviado com sucesso.",
-        confirmText: "Confirmar",
+        confirmText: "Ouvir Áudio",
+        cancelText: "Fechar",
+        onConfirm: () => {
+          router.push(`/ouvir/${historiaId}`);
+        }
       });
     } catch (error: any) {
       abrirDialog({
@@ -154,6 +158,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-around",
     padding: 16,
+    paddingHorizontal: 42,
     backgroundColor: theme.colors.background,
   },
   centerContent: {
@@ -222,7 +227,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   descricao: {
-    fontSize: 16,
+    fontSize: 22,
     color: "#666",
     marginBottom: 24,
     textAlign: "justify",

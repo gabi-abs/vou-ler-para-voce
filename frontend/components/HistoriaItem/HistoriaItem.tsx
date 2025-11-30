@@ -76,9 +76,11 @@ export default function HistoriaItem({ historia, onToggleFavorito, onDelete }: P
     >
       <View key={item.id} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Image source={{ uri: item.capa }} style={styles.capaImagem} />
+          <View style={styles.capaContainer}>
+            <Image source={{ uri: item.capa }} style={styles.capaImagem} />
+          </View>
           <View style={styles.cardInfo}>
-            <Text style={styles.cardTitle}>{item.titulo}</Text>
+            <Text style={styles.cardTitle} ellipsizeMode="tail" numberOfLines={2}>{item.titulo}</Text>
             <Text style={styles.cardDescription} numberOfLines={9} ellipsizeMode="tail">
               {item.texto}
             </Text>
@@ -146,9 +148,13 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: "row",
   },
-  capaImagem: {
+  capaContainer: {
     width: 150,
     height: 200,
+  },
+  capaImagem: {
+    width: "100%",
+    height: "100%",
     resizeMode: "cover",
     borderRadius: 8,
     marginBottom: 8,
@@ -190,11 +196,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   cardInfo: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   cardTitle: {
     ...theme.colors.title1,
     fontSize: 15,
+    width: 170,
   },
   cardDescription: {
     fontSize: 14,

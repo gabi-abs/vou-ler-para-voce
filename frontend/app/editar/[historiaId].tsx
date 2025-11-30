@@ -5,14 +5,14 @@ import Historia from "@/interfaces/HistoriaInterface";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
-    ActivityIndicator,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput
 } from "react-native";
 
 export default function EditarHistoriaScreen() {
@@ -90,12 +90,6 @@ export default function EditarHistoriaScreen() {
       }
 
       await historiaService.atualizar(historiaAtual.id, dados, arquivo);
-
-      abrirDialog({
-        title: "Sucesso!",
-        message: "História atualizada com sucesso.",
-        confirmText: "Confirmar"
-      });
 
       router.back();
     } catch (error: any) {
