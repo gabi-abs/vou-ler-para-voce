@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useDialog } from "@/context/DialogContext";
 import Historia from "@/interfaces/HistoriaInterface";
 import { theme } from "@/themes";
+import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Image, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -118,7 +119,8 @@ export default function GravarHistoriaScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <>
+     <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
         <Text style={styles.titulo}>{historia?.titulo}</Text>
         <View style={styles.capa}>
@@ -135,20 +137,26 @@ export default function GravarHistoriaScreen() {
         </View>
       </View>
 
-      <ScrollView style={styles.scrollView}>
+      <View style={styles.leitura}>
         <Text style={styles.descricao}>
           {historia?.texto || "Descrição não disponível."}
         </Text>
+      </View>
+      <View style={styles.espacoFinal} />
       </ScrollView>
-
-      <View style={styles.areaGravacao}>
+      <LinearGradient
+        colors={["transparent", theme.colors.background]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.areaGravacao}
+      >
         <AudioRecorder
           onFinish={(uri) => {
             salvarAudioUri(uri);
           }}
         />
-      </View>
-    </View>
+      </LinearGradient>
+    </>
   );
 }
 
@@ -156,9 +164,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-around",
+    // justifyContent: "flex-start",
     padding: 16,
-    paddingHorizontal: 42,
     backgroundColor: theme.colors.background,
   },
   centerContent: {
@@ -202,9 +209,15 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   areaGravacao: {
+    position: "absolute",
+    bottom: 0,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
+    backgroundColor: "transparent",
+    width: "100%",
+    padding: 16,
+    zIndex: 10,
   },
   statusText: {
     fontSize: 14,
@@ -227,13 +240,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   descricao: {
-    fontSize: 22,
+    fontSize: 17,
     color: "#666",
     marginBottom: 24,
-    textAlign: "justify",
-    lineHeight: 22,
+    lineHeight: 28,
   },
-  scrollView: { 
+  leitura: { 
     flex: 1, 
     marginBottom: 16,
     backgroundColor: theme.colors.white,
@@ -242,4 +254,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 20,
    },
+  espacoFinal: {
+    height: 200,
+  }
 });
