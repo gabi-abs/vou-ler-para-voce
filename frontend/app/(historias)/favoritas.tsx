@@ -58,7 +58,6 @@ export default function Favoritas() {
     router.push("/(historias)/minhas" as any);
   };
 
-  // 🔁 AGORA COM TOAST GARANTIDO
   const handleToggleFavorito = async (h: Historia) => {
     const estavaFavoritado = h.favoritado;
 

@@ -18,7 +18,7 @@ interface AtualizarHistoriaDTO {
 }
 
 const tratarEnderecoCapa = (capa: string): string => {
-  if (capa.includes("http")) {
+  if (capa?.includes("http")) {
     return capa;
   }
   return `${process.env.EXPO_PUBLIC_API_URL}${capa}`;
