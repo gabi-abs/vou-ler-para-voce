@@ -1,19 +1,34 @@
-import CapaSelector from "@/components/ui/CapaSelector";
 import { historiaService } from "@/api/historiaService";
+import CapaSelector from "@/components/ui/CapaSelector";
 import Historia from "@/interfaces/HistoriaInterface";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View, ActivityIndicator } from "react-native";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+} from "react-native";
 
 export default function EditarHistoriaScreen() {
-  const { historiaId, historia: historiaParam } = useLocalSearchParams() as { historiaId: string; historia: string };
+  const { historiaId, historia: historiaParam } = useLocalSearchParams() as {
+    historiaId: string;
+    historia: string;
+  };
   const router = useRouter();
 
   const historiaAtual: Historia = JSON.parse(historiaParam);
 
   const [titulo, setTitulo] = useState(historiaAtual.titulo || "");
   const [texto, setTexto] = useState(historiaAtual.texto || "");
-  const [capaUri, setCapaUri] = useState<string | undefined>(historiaAtual.capa);
+  const [capaUri, setCapaUri] = useState<string | undefined>(
+    historiaAtual.capa
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSalvar() {
@@ -38,25 +53,41 @@ export default function EditarHistoriaScreen() {
         trilhaSonoraId: historiaAtual.trilhaSonoraId,
       };
 
-      // Verifica se a capa foi alterada
+      // Verifica se a capa foi alterada e prepara arquivo para upload
       let arquivo: { uri: string; name: string; type: string } | undefined;
       if (capaUri && capaUri !== historiaAtual.capa) {
+        const fileName = capaUri.split("/").pop() || `capa_${Date.now()}.jpg`;
+        const extension = fileName.split('.').pop()?.toLowerCase() || 'jpg';
+
+        const mimeTypes: { [key: string]: string } = {
+          'jpg': 'image/jpeg',
+          'jpeg': 'image/jpeg',
+          'png': 'image/png',
+          'webp': 'image/webp',
+          'gif': 'image/gif',
+        };
+
+        const fileType = mimeTypes[extension] || 'image/jpeg';
+
+        const uriForUpload = Platform.OS === 'ios' ? capaUri.replace('file://', '') : capaUri;
+
         arquivo = {
-          uri: capaUri,
-          name: `capa_${Date.now()}.jpg`,
-          type: 'image/jpeg',
+          uri: uriForUpload,
+          name: fileName,
+          type: fileType,
         };
       }
 
       await historiaService.atualizar(historiaAtual.id, dados, arquivo);
-      
+
       Alert.alert("Sucesso!", "História atualizada com sucesso.");
       router.back();
     } catch (error: any) {
-      console.error('Erro ao atualizar história:', error);
+      console.error("Erro ao atualizar história:", error);
       Alert.alert(
         "Erro",
-        error.response?.data?.message || "Não foi possível atualizar a história. Tente novamente."
+        error.response?.data?.message ||
+          "Não foi possível atualizar a história. Tente novamente."
       );
     } finally {
       setIsLoading(false);
@@ -64,41 +95,54 @@ export default function EditarHistoriaScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Editar História</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ padding: 20, paddingBottom: 80 }}
+      >
+        <Text style={styles.titulo}>Editar História</Text>
 
-      <CapaSelector value={capaUri ?? null} onChange={(uri) => setCapaUri(uri ?? undefined)} />
+        <CapaSelector
+          value={capaUri ?? null}
+          onChange={(uri) => setCapaUri(uri ?? undefined)}
+        />
 
-      <Text style={styles.label}>Título</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Digite o título.."
-        placeholderTextColor="#AF9D8D"
-        value={titulo}
-        onChangeText={setTitulo}
-      />
+        <Text style={styles.label}>Título</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite o título.."
+          placeholderTextColor="#AF9D8D"
+          value={titulo}
+          onChangeText={setTitulo}
+        />
 
-      <Text style={styles.label}>Texto da História</Text>
-      <TextInput
-        style={[styles.input, styles.textarea]}
-        placeholder="Edite a sua história aqui.."
-        placeholderTextColor="#AF9D8D"
-        multiline
-        numberOfLines={4}
-        value={texto}
-        onChangeText={setTexto}
-      />
+        <Text style={styles.label}>Texto da História</Text>
+        <TextInput
+          style={[styles.input, styles.textarea]}
+          placeholder="Edite a sua história aqui.."
+          placeholderTextColor="#AF9D8D"
+          multiline
+          numberOfLines={4}
+          value={texto}
+          onChangeText={setTexto}
+        />
 
-      <View>
-        <Pressable style={styles.botaoSalvar} onPress={handleSalvar} disabled={isLoading}>
+        <Pressable
+          style={styles.botaoSalvar}
+          onPress={handleSalvar}
+          disabled={isLoading}
+        >
           {isLoading ? (
             <ActivityIndicator color="#D16314" />
           ) : (
             <Text style={styles.textoBotaoSalvar}>Salvar alterações</Text>
           )}
         </Pressable>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -106,7 +150,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFF8E2",
-    padding: 20,
+    // padding: 20,
   },
   titulo: {
     fontSize: 22,
@@ -137,18 +181,24 @@ const styles = StyleSheet.create({
   },
   // estilos de capa movidos para CapaSelector
   botaoSalvar: {
-    margin: 24,
-    backgroundColor: "#FFE187",
     borderRadius: 20,
-    height: 50,
-    borderWidth: 2,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    backgroundColor: '#FFE187',
     borderColor: "#E9C66C",
-    paddingVertical: 12,
+    height: 60
   },
   textoBotaoSalvar: {
-    color: "#D16314",
+    // color: "#D16314",
     textAlign: "center",
+    // fontWeight: "bold",
+    // fontSize: 22,
+    fontSize: 18,
+    color: '#C3782C',
     fontWeight: "bold",
-    fontSize: 20,
+    paddingHorizontal: 10,
+  },
+  botaoDesabilitado: {
+    opacity: 0.6,
   },
 });

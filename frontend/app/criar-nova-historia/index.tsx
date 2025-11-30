@@ -96,8 +96,8 @@ export default function CriarNovaHistoria() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView 
-          // contentContainerStyle={{ paddingBottom: 200 }}
           keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ padding: 20, paddingBottom: 80 }}
         >
           <Text style={styles.titulo}>Criar Nova História</Text>
 
@@ -143,7 +143,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFF8E2",
-    padding: 20,
   },
   titulo: {
     fontSize: 22,

@@ -16,7 +16,7 @@ export default function OuvirHistoriaScreen() {
   const [telaBloqueada, setTelaBloqueada] = useState(false);
   
   // Pega o primeiro áudio da lista de áudios da história
-  const audioUrl = historia?.audios?.[0]?.audioUrl;
+  const audioUrl = historia?.audios?.sort((a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime())?.[0]?.audioUrl;
   
   // Hook do player de áudio - passa o audioUrl do primeiro áudio
   const { isPlaying, duracaoMs, posicaoMs, togglePlayPause, formatarMs } = useAudioPlayer(audioUrl);

@@ -1,20 +1,20 @@
+import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Animated,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
-  Pressable,
-  Animated,
 } from "react-native";
-import { useRouter } from "expo-router";
 
+import FormatoDeCoracao from "@/assets/svg/formato-de-coracao.svg";
 import HistoriaItem from "@/components/HistoriaItem/HistoriaItem";
 import { useHistoriasFavoritas } from "@/hooks/use-historia-favorita";
 import { useToggleFavoritoHistoria } from "@/hooks/use-toggle-favorito-historia";
 import type Historia from "@/interfaces/HistoriaInterface";
-import FormatoDeCoracao from "@/assets/svg/formato-de-coracao.svg";
 
 export default function Favoritas() {
   const router = useRouter();
@@ -96,11 +96,7 @@ export default function Favoritas() {
           color={"#EDB638"}
         />
         {erro ? <Text style={styles.erro}>{erro}</Text> : null}
-        <Text style={styles.text2}>Nenhuma história favorita ainda.</Text>
-        <Text style={styles.text}>
-          Marque histórias com 💛 para encontrá-las aqui.
-        </Text>
-
+        <Text style={styles.text2}>Nenhuma história favoritada</Text>
         <Pressable style={styles.botaoVerHistorias} onPress={handleVerHistorias}>
           <Text style={styles.textoBotaoVerHistorias}>Ver Histórias</Text>
         </Pressable>
@@ -157,7 +153,7 @@ const styles = StyleSheet.create({
   containerEmpty: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#FFF8E2",
+    backgroundColor: "#F9ECFD",
     justifyContent: "center",
   },
   containerLista: {
@@ -205,7 +201,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   botaoVerHistorias: {
-    backgroundColor: "#E5DFF6",
+    backgroundColor:"#EDB638",
     marginTop: 16,
     borderRadius: 20,
     height: 50,
@@ -213,7 +209,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textoBotaoVerHistorias: {
-    color: "#4D4388",
+    color: "#ffffffff",
     textAlign: "center",
     fontWeight: "600",
     fontSize: 20,
