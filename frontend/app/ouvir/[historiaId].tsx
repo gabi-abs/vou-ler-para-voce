@@ -28,13 +28,18 @@ export default function OuvirHistoriaScreen() {
   function bloquearTela(){
     setTelaBloqueada(bloqueado => {
       if (bloqueado) {
-
         return false;
       }
-
+      togglePlayPause();
       return true;
     });
   }
+
+  useEffect(() => {
+    if (!isPlaying) {
+      setTelaBloqueada(false);
+    }
+  }, [isPlaying]);
 
 
   async function buscarHistoria() {

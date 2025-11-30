@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Animated, BackHandler, PanResponder, StyleSheet, Text, View } from "react-native";
+import NuvemBackground from "../NuvemBackgroud/NuvemBackgroud";
 
 export default function TelaBloqueada({ onDesbloquear }: { onDesbloquear: () => void }) {
   const navigation = useNavigation();
@@ -55,7 +56,8 @@ export default function TelaBloqueada({ onDesbloquear }: { onDesbloquear: () => 
   ).current;
 
   return (
-    <View style={[styles.container, { backgroundColor: '#181820' }]}> 
+    <View style={[styles.container]}> 
+      <NuvemBackground />
       <Text style={[styles.title, { color: '#FFF8E2' }]}>Modo Travado</Text>
       <Text style={[styles.message, { color: '#E5DFF6' }]}>Para garantir a concentração, a tela está bloqueada enquanto o áudio é reproduzido.</Text>
       <LinearGradient
@@ -64,7 +66,7 @@ export default function TelaBloqueada({ onDesbloquear }: { onDesbloquear: () => 
         end={[1, 1]}
         style={[styles.slider, { width: SLIDER_WIDTH, height: SLIDER_HEIGHT }]}
       >
-        <Text style={[styles.sliderText, { color: '#FFF8E2', opacity: 0.95 }]}>Deslize o círculo para desbloquear</Text>
+        <Text style={[styles.sliderText, { color: '#FFF8E2', opacity: 0.95 }]}>Desbloquear...</Text>
         <Animated.View
           style={[
             styles.thumb,
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#181820",
+    backgroundColor: "#222249f8",
     padding: 24,
   },
   lockIcon: {
