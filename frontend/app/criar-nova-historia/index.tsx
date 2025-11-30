@@ -1,6 +1,7 @@
 import { historiaService } from "@/api/historiaService";
 import CapaSelector from "@/components/ui/CapaSelector";
 import { useAuth } from "@/context/AuthContext";
+import { useDialog } from "@/context/DialogContext";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput } from "react-native";
@@ -13,14 +14,24 @@ export default function CriarNovaHistoria() {
   const router = useRouter();
   const { usuario } = useAuth();
 
+  const { abrirDialog, fecharDialog } = useDialog();
+
   async function handleSalvar() {
     if (!titulo.trim()) {
-      Alert.alert("Atenção", "Por favor, insira o título da história.");
+      abrirDialog({
+        title: "Atenção",
+        message: "Por favor, insira o título da históriaa.",
+        cancelText: "Voltar",
+      });
       return;
     }
 
     if (!descricao.trim()) {
-      Alert.alert("Atenção", "Por favor, insira a descrição da história.");
+      abrirDialog({
+        title: "Atenção",
+        message: "Por favor, insira a descrição da história.",
+        cancelText: "Voltar",
+      });
       return;
     }
 
@@ -69,22 +80,25 @@ export default function CriarNovaHistoria() {
 
       await historiaService.criar(dados, arquivo);
       
-      Alert.alert(
-        "Sucesso!",
-        "História criada com sucesso!",
-        [
-          {
-            text: "OK",
-            onPress: () => router.navigate("/(historias)/minhas")
-          }
-        ]
-      );
+
+      abrirDialog({
+        title: "Sucesso!",
+        message: "História criada com sucesso!",  
+        confirmText: "Confirmar",
+        onConfirm: () => {
+          router.navigate("/(historias)/minhas");
+        }
+      });
+
     } catch (error: any) {
+
+      abrirDialog({
+        title: "Erro",
+        message: error?.response?.data?.message || "Não foi possível criar a história. Tente novamente.",
+        confirmText: "Confirmar",
+      });
+
       console.error("Erro ao criar história:", error);
-      Alert.alert(
-        "Erro",
-        error?.response?.data?.message || "Não foi possível criar a história. Tente novamente."
-      );
     } finally {
       setLoading(false);
     }

@@ -1,19 +1,22 @@
 import { historiaService } from "@/api/historiaService";
 import ProgressBar from "@/components/ProgressBar/ProgressBar";
 import TelaBloqueada from "@/components/TelaBloqueada/TelaBloqueada";
+import { useDialog } from "@/context/DialogContext";
 import { useAudioPlayer } from "@/hooks/use-audio-player";
 import Historia from "@/interfaces/HistoriaInterface";
 import { theme } from "@/themes";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function OuvirHistoriaScreen() {
   const { historiaId } = useLocalSearchParams() as { historiaId: string };
   const [historia, setHistoria] = useState<Historia | null>(null);
   const [loading, setLoading] = useState(true);
   const [telaBloqueada, setTelaBloqueada] = useState(false);
+
+  const { abrirDialog, fecharDialog } = useDialog();
   
   // Pega o primeiro áudio da lista de áudios da história
   const audioUrl = historia?.audios?.sort((a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime())?.[0]?.audioUrl;
@@ -40,11 +43,11 @@ export default function OuvirHistoriaScreen() {
       const historiaData = await historiaService.listarPorHistoriaId(Number(historiaId));
       setHistoria(historiaData);
     } catch (error: any) {
-      console.error("Erro ao buscar história:", error);
-      Alert.alert(
-        "Erro",
-        error?.response?.data?.message || "Não foi possível carregar a história."
-      );
+      abrirDialog({
+        title: "Erro",
+        message: error?.response?.data?.message || "Não foi possível carregar a história.",
+        confirmText: "Confirmar",
+      });
     } finally {
       setLoading(false);
     }

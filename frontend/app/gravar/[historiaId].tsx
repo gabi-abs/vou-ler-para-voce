@@ -2,6 +2,7 @@ import { audioService } from "@/api/audioService";
 import { historiaService } from "@/api/historiaService";
 import AudioRecorder from "@/components/audio/AudioRecord";
 import { useAuth } from "@/context/AuthContext";
+import { useDialog } from "@/context/DialogContext";
 import Historia from "@/interfaces/HistoriaInterface";
 import { theme } from "@/themes";
 import { useLocalSearchParams } from "expo-router";
@@ -16,17 +17,21 @@ export default function GravarHistoriaScreen() {
   const [enviando, setEnviando] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const { abrirDialog, fecharDialog } = useDialog();
+
   async function buscarHistoria() {
     try {
       setLoading(true);
       const historiaData = await historiaService.listarPorHistoriaId(Number(historiaId));
       setHistoria(historiaData);
     } catch (error: any) {
-      console.error("Erro ao buscar história:", error);
-      Alert.alert(
-        "Erro",
-        error?.response?.data?.message || "Não foi possível carregar a história."
-      );
+
+      abrirDialog({
+        title: "Erro",
+        message: error?.response?.data?.message || "Não foi possível carregar a história.",
+        confirmText: "Confirmar",
+      });
+
     } finally {
       setLoading(false);
     }
@@ -75,14 +80,19 @@ export default function GravarHistoriaScreen() {
       const resultado = await audioService.criar(dados, arquivo);
       
       console.log('Áudio enviado com sucesso:', resultado);
-      
-      Alert.alert("Sucesso!", "Áudio enviado com sucesso!");
+
+
+      abrirDialog({
+        title: "Sucesso!",
+        message: "Áudio enviado com sucesso.",
+        confirmText: "Confirmar",
+      });
     } catch (error: any) {
-      console.error("Erro ao enviar áudio:", error);
-      Alert.alert(
-        "Erro",
-        error?.response?.data?.message || "Não foi possível enviar o áudio. Tente novamente."
-      );
+      abrirDialog({
+        title: "Erro",
+        message: error?.response?.data?.message || "Não foi possível enviar o áudio. Tente novamente.",
+        confirmText: "Confirmar",
+      });
     } finally {
       setEnviando(false);
     }

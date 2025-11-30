@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
-import { Alert, Animated, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Animated, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { historiaService } from "@/api/historiaService";
 import HistoriaItem from "@/components/HistoriaItem/HistoriaItem";
+import { useDialog } from "@/context/DialogContext";
 import { useHistoriasFavoritas } from "@/hooks/use-historia-favorita";
 import { useHistorias } from "@/hooks/use-historias";
 import { useToggleFavoritoHistoria } from "@/hooks/use-toggle-favorito-historia";
@@ -13,6 +14,7 @@ export default function Minhas() {
   const { data: historiaLista, isLoading, error, refetch } = useHistorias();
   const { data: favoritas } = useHistoriasFavoritas();
   const [isDeleting, setIsDeleting] = useState(false);
+  const { abrirDialog, fecharDialog } = useDialog();
 
   // usando mutateAsync pra controlar certinho o fluxo → igual Favoritas
   const { mutateAsync: toggleFavorito, isPending } = useToggleFavoritoHistoria();
@@ -72,18 +74,12 @@ export default function Minhas() {
   };
 
   const handleDelete = async (h: Historia) => {
-    Alert.alert(
-      "Excluir História",
-      `Tem certeza que deseja excluir "${h.titulo}"?`,
-      [
-        {
-          text: "Cancelar",
-          style: "cancel"
-        },
-        {
-          text: "Excluir",
-          style: "destructive",
-          onPress: async () => {
+    abrirDialog({
+      title: "Excluir História",
+      message: `Tem certeza que deseja excluir "${h.titulo}"? Esta ação não pode ser desfeita.`,
+      confirmText: "Excluir",
+      cancelText: "Cancelar",
+      onConfirm: async () => {
             try {
               setIsDeleting(true);
               await historiaService.deletar(h.id);
@@ -92,17 +88,19 @@ export default function Minhas() {
               refetch();
             } catch (error: any) {
               console.error("Erro ao excluir história:", error);
-              Alert.alert(
-                "Erro",
-                error?.response?.data?.message || "Não foi possível excluir a história."
-              );
+              abrirDialog({
+                title: "Erro",
+                message: error?.response?.data?.message || "Não foi possível excluir a história.",
+                confirmText: "Confirmar",
+                onConfirm: () => {
+                  fecharDialog();
+                },
+              });
             } finally {
               setIsDeleting(false);
             }
           }
-        }
-      ]
-    );
+    });
   };
 
   return (

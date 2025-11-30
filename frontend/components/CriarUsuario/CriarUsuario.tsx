@@ -1,6 +1,7 @@
 import { usuarioService } from "@/api/usuarioService";
+import { useDialog } from "@/context/DialogContext";
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 interface CriarUsuarioProps {
   onVoltar: () => void;
@@ -14,20 +15,36 @@ export default function CriarUsuario({ onVoltar, onCadastroSucesso }: CriarUsuar
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { abrirDialog } = useDialog();
+
   const handleCadastro = async () => {
     // Validações
     if (!email || !nome || !senha || !confirmarSenha) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos");
+      abrirDialog({
+        title: "Erro",
+        message: "Por favor, preencha todos os campos.",
+        confirmText: "Confirmar",
+      });
       return;
     }
 
     if (senha !== confirmarSenha) {
-      Alert.alert("Erro", "As senhas não coincidem");
+      abrirDialog({
+        title: "Erro",
+        message: "As senhas não coincidem.",
+        confirmText: "Confirmar",
+      });
+      //
       return;
     }
 
     if (senha.length < 6) {
-      Alert.alert("Erro", "A senha deve ter pelo menos 6 caracteres");
+      abrirDialog({
+        title: "Erro",
+        message: "A senha deve ter pelo menos 6 caracteres.",
+        confirmText: "Confirmar",
+      });
+      //
       return;
     }
 
@@ -40,24 +57,26 @@ export default function CriarUsuario({ onVoltar, onCadastroSucesso }: CriarUsuar
       };
 
       await usuarioService.criar(registerForm);
+
+
+      abrirDialog({
+        title: "Sucesso",
+        message: "Cadastro realizado com sucesso!",
+        confirmText: "Confirmar",
+        onConfirm: () => {
+          onCadastroSucesso?.();
+          onVoltar();
+        }
+      });
       
-      Alert.alert(
-        "Sucesso", 
-        "Cadastro realizado com sucesso!",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              onCadastroSucesso?.();
-              onVoltar();
-            }
-          }
-        ]
-      );
     } catch (error: any) {
-      console.error("Erro ao cadastrar:", error);
       const mensagemErro = error.response?.data?.message || "Erro ao realizar cadastro. Tente novamente.";
-      Alert.alert("Erro", mensagemErro);
+
+      abrirDialog({
+        title: "Erro",
+        message: mensagemErro,
+        confirmText: "Confirmar",
+      });
     } finally {
       setLoading(false);
     }

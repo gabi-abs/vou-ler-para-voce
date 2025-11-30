@@ -1,18 +1,18 @@
 import { historiaService } from "@/api/historiaService";
 import CapaSelector from "@/components/ui/CapaSelector";
+import { useDialog } from "@/context/DialogContext";
 import Historia from "@/interfaces/HistoriaInterface";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput
 } from "react-native";
 
 export default function EditarHistoriaScreen() {
@@ -31,14 +31,25 @@ export default function EditarHistoriaScreen() {
   );
   const [isLoading, setIsLoading] = useState(false);
 
+  const { abrirDialog, fecharDialog } = useDialog();
+
   async function handleSalvar() {
     if (!titulo.trim()) {
-      Alert.alert("Atenção", "Por favor, insira o título da história.");
+      abrirDialog({
+        title: "Atenção",
+        message: "Por favor, insira o título da história.",
+        confirmText: "Confirmar",
+      });
       return;
     }
 
     if (!texto.trim()) {
-      Alert.alert("Atenção", "Por favor, insira o texto da história.");
+      abrirDialog({
+        title: "Atenção",
+        message: "Por favor, insira o texto da história.",
+        confirmText: "Confirmar",
+      });
+      //
       return;
     }
 
@@ -80,15 +91,21 @@ export default function EditarHistoriaScreen() {
 
       await historiaService.atualizar(historiaAtual.id, dados, arquivo);
 
-      Alert.alert("Sucesso!", "História atualizada com sucesso.");
+      abrirDialog({
+        title: "Sucesso!",
+        message: "História atualizada com sucesso.",
+        confirmText: "Confirmar"
+      });
+
       router.back();
     } catch (error: any) {
-      console.error("Erro ao atualizar história:", error);
-      Alert.alert(
-        "Erro",
-        error.response?.data?.message ||
-          "Não foi possível atualizar a história. Tente novamente."
-      );
+      abrirDialog({
+        title: "Erro",
+        message:
+          error.response?.data?.message ||
+          "Não foi possível atualizar a história. Tente novamente.",
+        confirmText: "Confirmar",
+      });
     } finally {
       setIsLoading(false);
     }

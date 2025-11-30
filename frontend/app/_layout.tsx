@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { AuthProvider } from '@/context/AuthContext';
+import { DialogProvider } from '@/context/DialogContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { theme } from '@/themes';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
@@ -41,17 +42,19 @@ export default function RootLayout() {
         backgroundColor="transparent"
       />
       <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack screenOptions={screenOptions}>
-            <Stack.Screen name="index" options={{ presentation: 'modal', headerShown: false }} />
-            <Stack.Screen name="(historias)"  />
-            <Stack.Screen name="gravar/[historiaId]" options={{ headerTitle: 'Histórias' }} />
-            <Stack.Screen name="editar/[historiaId]" options={{ headerTitle: 'Histórias' }} />
-            <Stack.Screen name="ouvir/[historiaId]" options={{ headerTitle: 'Histórias'}} />
-          </Stack>
-        </ThemeProvider>
-      </AuthProvider>
+        <AuthProvider>
+          <DialogProvider>
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <Stack screenOptions={screenOptions}>
+                <Stack.Screen name="index" options={{ presentation: 'modal', headerShown: false }} />
+                <Stack.Screen name="(historias)"  />
+                <Stack.Screen name="gravar/[historiaId]" options={{ headerTitle: 'Histórias' }} />
+                <Stack.Screen name="editar/[historiaId]" options={{ headerTitle: 'Histórias' }} />
+                <Stack.Screen name="ouvir/[historiaId]" options={{ headerTitle: 'Histórias'}} />
+              </Stack>
+            </ThemeProvider>
+          </DialogProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </>
   );
