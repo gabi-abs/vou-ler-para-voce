@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -54,7 +55,7 @@ export default function TelaBloqueada({ onDesbloquear }: { onDesbloquear: () => 
   ).current;
 
   return (
-    <View style={[styles.container, { backgroundColor: '#181820' }]}> {/* fundo escuro */}
+    <View style={[styles.container, { backgroundColor: '#181820' }]}> 
       <Text style={[styles.title, { color: '#FFF8E2' }]}>Modo Travado</Text>
       <Text style={[styles.message, { color: '#E5DFF6' }]}>Para garantir a concentração, a tela está bloqueada enquanto o áudio é reproduzido.</Text>
       <LinearGradient
@@ -77,7 +78,7 @@ export default function TelaBloqueada({ onDesbloquear }: { onDesbloquear: () => 
           ]}
           {...panResponder.panHandlers}
         >
-          <Text style={styles.thumbIcon}>{unlocked ? "✅" : "🔒"}</Text>
+          <Text style={styles.thumbIcon}>{unlocked ? <MaterialIcons name="check" size={28} color="#4D4388" /> : <MaterialIcons name="lock" size={28} color="#4D4388" />}</Text>
         </Animated.View>
       </LinearGradient>
     </View>
