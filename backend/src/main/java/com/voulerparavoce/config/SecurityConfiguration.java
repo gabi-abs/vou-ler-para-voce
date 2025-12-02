@@ -25,8 +25,8 @@ public class SecurityConfiguration {
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/api/usuario/login", // Url que usaremos para fazer login
             "/api/usuario/criar", // Url que usaremos para criar um usuário
-            "/imagens/**", // Permitir acesso público às imagens
-            "/audios/**", // Permitir acesso público aos áudios
+            "/uploads/imagens/**", // Permitir acesso público às imagens
+            "/uploads/audios/**", // Permitir acesso público aos áudios
 
             // 🔓 Swagger/OpenAPI UI
             "/v3/api-docs/**",
