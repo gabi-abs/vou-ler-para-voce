@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalar Vou ler para você</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #FDF2FF 0%, #EEF2FF 100%);
+            color: #1F2937;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: #FFFFFF;
+            padding: 45px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.18);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #8B5CF6, #EC4899, #F97316);
+        }
+
+        h1 {
+            color: #8B5CF6;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 2.1rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        h3 {
+            color: #EC4899;
+            margin-bottom: 18px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .steps {
+            margin: 28px 0;
+            padding: 24px;
+            background-color: #F5F3FF;
+            border-radius: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+        }
+
+        .step {
+            margin: 16px 0;
+            padding-left: 32px;
+            position: relative;
+            font-size: 1.05rem;
+            color: #1F2937;
+        }
+
+        .step::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #8B5CF6;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background: #FFFFFF;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(139, 92, 246, 0.3);
+        }
+
+        .download-btn {
+            display: block;
+            background: linear-gradient(to right, #8B5CF6, #EC4899);
+            color: #FFFFFF;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            margin: 28px 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            box-shadow: 0 6px 18px rgba(139, 92, 246, 0.4);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.28);
+        }
+
+        .download-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .download-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.6s;
+        }
+
+        .download-btn:hover::after {
+            left: 100%;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #8B5CF6;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 0;
+            border-bottom: 1px solid transparent;
+            font-size: 1.05rem;
+        }
+
+        .back-link:hover {
+            color: #EC4899;
+            border-bottom: 1px solid #EC4899;
+            gap: 8px;
+        }
+
+        .app-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+                align-items: flex-start;
+            }
+
+            .card {
+                padding: 30px 25px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .download-btn {
+                font-size: 1.2rem;
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+ 
+
+    <h1>📲 Instalar o app</h1>
+
+    <p>Para começar a criar momentos especiais com as crianças, siga os passos abaixo para instalar o aplicativo no seu dispositivo Android.</p>
+
+    <div class="steps">
+        <h3>Passos para instalação:</h3>
+        <div class="step">Clique no botão abaixo para baixar o arquivo APK do aplicativo.</div>
+        <div class="step">Quando o download terminar, toque na notificação ou abra o arquivo baixado.</div>
+        <div class="step">Se aparecer um aviso sobre “Fontes desconhecidas”, permita a instalação nas configurações do Android.</div>
+        <div class="step">Concluída a instalação, abra o <strong>Vou ler para você</strong> e comece a gravar suas histórias.</div>
+    </div>
+
+    <!-- Ajuste o href para a rota/URL real do APK -->
+    <a href="/download-apk-vouler" class="download-btn">
+        📥 Baixar APK do Vou ler para você
+    </a>
+
+    <p><a href="index.html" class="back-link">← Voltar para a página inicial</a></p>
+</div>
+</body>
+</html>

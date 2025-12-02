@@ -31,48 +31,16 @@ public class SecurityConfiguration {
             // 🔓 Swagger/OpenAPI UI
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger-ui/index.html"
+            "/swagger-ui/index.html",
+
+             "/",
+            "/install",
+            "/download-apk",
+            "/index.html",
+            "/install.html",
+            "/app-release.apk",
     };
 
-//    // Endpoints que requerem autenticação para serem acessados
-//    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
-//            // Histórias (listar / visualizar)
-//            "/api/historia/listar",
-//            "/api/historia/listarPorHistoriaid/**",
-//            "/api/historia/usuario/**",
-//
-//            // Trilhas (listar / visualizar)
-//            "/api/trilhasonora/listar",
-//            "/api/trilhasonora/{id}",
-//
-//            // Áudio (listar/baixar/play) — criação / deleção restritas abaixo
-//            "/api/audio/**",
-//            "/audios/**",
-//            "/api/usuario/user-info"
-//    };
-
-//    // Endpoints que só podem ser acessador por usuários com permissão de cliente
-//    public static final String [] ENDPOINTS_CUSTOMER = {
-//             "/api/historia/criar", // Movido para ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED
-//            "/api/historia/vincularTrilha/**", // vincular/remover trilha de uma história (opcional)
-//            "/api/historia/listar",
-//            "/api/historia/atualizar/**",
-//            "/api/historia/deletar/**",
-//            "/api/historia/favoritas/**", // historias favoritas de um usuario
-//
-//            // Áudio (ações do próprio usuário)
-//            "/api/audio/criar",
-//            "/api/audio/atualizar/**",
-//            "/api/audio/deletar/**",
-//
-//            // Favoritos (somente do usuário)
-//            "/api/favorito/adicionar",
-//            "/api/favorito/remover",
-//            "/api/favorito/usuario/**",
-//            "/api/usuario/listar",
-//
-//            "/api/usuario/deletar/**",
-//    };
 
     // Endpoints que só podem ser acessador por usuários com permissão de administrador
     public static final String [] ENDPOINTS_ADMIN = {
