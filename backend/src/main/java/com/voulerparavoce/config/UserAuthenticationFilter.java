@@ -64,6 +64,8 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         return !Arrays.asList(SecurityConfiguration.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).contains(requestURI) &&
                 !requestURI.contains("imagens/") &&
                 !requestURI.contains("audios/") &&
+                !requestURI.contains("images/") &&
+                !requestURI.contains("videos/") &&
                 !requestURI.startsWith("/swagger-ui") &&
                 !requestURI.startsWith("/v3/api-docs");
     }

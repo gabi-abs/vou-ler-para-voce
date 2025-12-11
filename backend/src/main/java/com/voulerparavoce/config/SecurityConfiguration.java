@@ -28,6 +28,10 @@ public class SecurityConfiguration {
             "/imagens/**", // Permitir acesso público às imagens
             "/audios/**", // Permitir acesso público aos áudios
 
+
+            "/images/**", // Permitir acesso público às imagens
+            "/videos/**", // Permitir acesso público aos áudios
+
             // 🔓 Swagger/OpenAPI UI
             "/v3/api-docs/**",
             "/swagger-ui/**",
