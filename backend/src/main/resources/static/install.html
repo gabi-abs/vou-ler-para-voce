@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instalar Vou ler para você</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -141,7 +144,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
             transition: 0.6s;
         }
 
@@ -214,12 +217,12 @@
         }
 
         .qr-img {
-            width: 150px;
-            height: 150px;
-            border: 4px solid #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            background-color: #f9fafb; /* fallback se a imagem não carregar de cara */
+            width: 220px;
+            height: 220px;
+            border: 5px solid #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            background-color: #f9fafb;
         }
 
         @media (max-width: 480px) {
@@ -248,34 +251,40 @@
         }
     </style>
 </head>
+
 <body>
-<div class="card">
-    <h1>📲 Instalar Vou ler para você</h1>
+    <div class="card">
+        <h1>📲 Instalar Vou ler para você</h1>
 
-    <p>Para começar a criar momentos especiais com as crianças, siga os passos abaixo para instalar o aplicativo no seu dispositivo Android.</p>
+        <p>Para começar a criar momentos especiais com as crianças, siga os passos abaixo para instalar o aplicativo no
+            seu dispositivo Android.</p>
 
-    <div class="steps">
-        <h3>Passos para instalação:</h3>
-        <div class="step">Clique no botão abaixo para baixar o arquivo APK do aplicativo.</div>
-        <div class="step">Quando o download terminar, toque na notificação ou abra o arquivo baixado.</div>
-        <div class="step">Se aparecer um aviso sobre “Fontes desconhecidas”, permita a instalação nas configurações do Android.</div>
-        <div class="step">Concluída a instalação, abra o <strong>Vou ler para você</strong> e comece a gravar suas histórias.</div>
+        <div class="steps">
+            <h3>Passos para instalação:</h3>
+            <div class="step">Clique no botão abaixo para baixar o arquivo APK do aplicativo.</div>
+            <div class="step">Quando o download terminar, toque na notificação ou abra o arquivo baixado.</div>
+            <div class="step">Se aparecer um aviso sobre “Fontes desconhecidas”, permita a instalação nas configurações
+                do Android.</div>
+            <div class="step">Concluída a instalação, abra o <strong>Vou ler para você</strong> e comece a gravar suas
+                histórias.</div>
+        </div>
+
+        <!-- Ajuste o href para a URL real do APK -->
+        <a href="https://github.com/gabi-abs/vou-ler-para-voce/releases/download/Vers%C3%A3o1/app-release.apk"
+            class="download-btn">
+            📥 Baixar APK do Vou ler para você
+        </a>
+
+        <div class="qr-section">
+            <p class="qr-title">Está acessando pelo computador? Aponte a câmera do celular para baixar o app:</p>
+            <!-- Ajuste o caminho do QR Code gerado para o link do APK ou para esta página -->
+            <img src="images/qrcodeApk.png" alt="QR Code para download do Vou ler para você" class="qr-img">
+        </div>
+
+        <div class="back-link-container">
+            <a href="index.html" class="back-link">← Voltar para a página inicial</a>
+        </div>
     </div>
-
-    <!-- Ajuste o href para a URL real do APK -->
-    <a href="https://github.com/gabi-abs/vou-ler-para-voce/releases/download/Vers%C3%A3o1/app-release.apk" class="download-btn">
-        📥 Baixar APK do Vou ler para você
-    </a>
-
-    <div class="qr-section">
-        <p class="qr-title">Está acessando pelo computador? Aponte a câmera do celular para baixar o app:</p>
-        <!-- Ajuste o caminho do QR Code gerado para o link do APK ou para esta página -->
-        <img src="images/qrcodeApk.png" alt="QR Code para download do Vou ler para você" class="qr-img">
-    </div>
-
-    <div class="back-link-container">
-        <a href="index.html" class="back-link">← Voltar para a página inicial</a>
-    </div>
-</div>
 </body>
+
 </html>
