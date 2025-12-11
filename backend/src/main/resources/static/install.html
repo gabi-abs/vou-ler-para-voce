@@ -56,6 +56,8 @@
             font-weight: 700;
             font-family: 'Poppins', sans-serif;
             letter-spacing: -0.5px;
+            justify-content: center;
+            text-align: center;
         }
 
         h3 {
@@ -64,6 +66,11 @@
             font-size: 1.4rem;
             font-weight: 600;
             font-family: 'Poppins', sans-serif;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #1F2937;
         }
 
         .steps {
@@ -142,6 +149,10 @@
             left: 100%;
         }
 
+        .back-link-container {
+            text-align: center;
+        }
+
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -167,6 +178,50 @@
             margin-bottom: 24px;
         }
 
+        .app-icon-circle {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #FDF2FF, #EDE9FE);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.25);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #ffffff;
+        }
+
+        .app-icon-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 21px;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #E5E7EB;
+        }
+
+        .qr-title {
+            font-size: 0.95rem;
+            color: #64748B;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .qr-img {
+            width: 150px;
+            height: 150px;
+            border: 4px solid #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            background-color: #f9fafb; /* fallback se a imagem não carregar de cara */
+        }
+
         @media (max-width: 480px) {
             body {
                 padding: 15px;
@@ -185,14 +240,17 @@
                 font-size: 1.2rem;
                 padding: 18px;
             }
+
+            .app-icon-circle {
+                width: 100px;
+                height: 100px;
+            }
         }
     </style>
 </head>
 <body>
 <div class="card">
- 
-
-    <h1>📲 Instalar o app</h1>
+    <h1>📲 Instalar Vou ler para você</h1>
 
     <p>Para começar a criar momentos especiais com as crianças, siga os passos abaixo para instalar o aplicativo no seu dispositivo Android.</p>
 
@@ -204,12 +262,20 @@
         <div class="step">Concluída a instalação, abra o <strong>Vou ler para você</strong> e comece a gravar suas histórias.</div>
     </div>
 
-    <!-- Ajuste o href para a rota/URL real do APK -->
-    <a href="/download-apk-vouler" class="download-btn">
+    <!-- Ajuste o href para a URL real do APK -->
+    <a href="https://github.com/gabi-abs/vou-ler-para-voce/releases/download/Vers%C3%A3o1/app-release.apk" class="download-btn">
         📥 Baixar APK do Vou ler para você
     </a>
 
-    <p><a href="index.html" class="back-link">← Voltar para a página inicial</a></p>
+    <div class="qr-section">
+        <p class="qr-title">Está acessando pelo computador? Aponte a câmera do celular para baixar o app:</p>
+        <!-- Ajuste o caminho do QR Code gerado para o link do APK ou para esta página -->
+        <img src="images/qrcodeApk.png" alt="QR Code para download do Vou ler para você" class="qr-img">
+    </div>
+
+    <div class="back-link-container">
+        <a href="index.html" class="back-link">← Voltar para a página inicial</a>
+    </div>
 </div>
 </body>
 </html>
