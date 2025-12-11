@@ -66,6 +66,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                 !requestURI.contains("audios/") &&
                 !requestURI.contains("images/") &&
                 !requestURI.contains("videos/") &&
+                !requestURI.contains("/favicon.ico") &&
                 !requestURI.startsWith("/swagger-ui") &&
                 !requestURI.startsWith("/v3/api-docs");
     }

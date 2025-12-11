@@ -43,6 +43,7 @@ public class SecurityConfiguration {
             "/index.html",
             "/install.html",
             "/app-release.apk",
+            "/favicon.ico"
     };
 
 
