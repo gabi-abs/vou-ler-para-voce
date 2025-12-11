@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { favoritoService } from "@/api/favoritoService";
 import { useUserInfo } from "@/hooks/use-user-info";
 import type Historia from "@/interfaces/HistoriaInterface";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type ToggleArgs = {
   historia: Historia;

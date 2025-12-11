@@ -1,6 +1,6 @@
-import { historiaService } from "@/api/historiaService";
 import CapaSelector from "@/components/ui/CapaSelector";
 import { useDialog } from "@/context/DialogContext";
+import { useUpdateHistorias } from "@/hooks/use-historias";
 import Historia from "@/interfaces/HistoriaInterface";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
@@ -16,6 +16,7 @@ import {
 } from "react-native";
 
 export default function EditarHistoriaScreen() {
+   const { mutate } = useUpdateHistorias()
   const { historiaId, historia: historiaParam } = useLocalSearchParams() as {
     historiaId: string;
     historia: string;
@@ -89,7 +90,7 @@ export default function EditarHistoriaScreen() {
         };
       }
 
-      await historiaService.atualizar(historiaAtual.id, dados, arquivo);
+      mutate({ historiaId: historiaAtual.id, dados, arquivo });
 
       router.back();
     } catch (error: any) {
